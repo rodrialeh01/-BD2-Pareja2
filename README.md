@@ -7,3 +7,4 @@
 
 - ## Prácticas
     - #### [`💻 Práctica 1`](./Practica1/)
+    - #### [`💻 Práctica 2`](./Practica2/)
