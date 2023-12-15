@@ -2,18 +2,20 @@
   "name": "cli",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Grupo2 BD2",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "inquirer": "^9.2.12",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.5",
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "readline-sync": "^1.4.10"
   }
 }
