@@ -1,16 +1,10 @@
-import inquirer from 'inquirer';
-import 'readline-sync';
-inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcion',
-      message: 'Selecciona una opción:',
-      choices: [
-        { name: 'Opción 1', value: 'opcion1' },
-        { name: 'Opción 2', value: 'opcion2' },
-      ],
-    },
-  ])  
-.then(answers => {
-    console.log('Answer:', answers)
-})
+import { db_root } from './db.js';
+
+//prueba de conexion
+try {
+  const connection1 = await db_root.getConnection();
+  const [rows1, fields1] = await connection1.execute('SELECT * FROM USER');
+  console.log(rows1);
+}catch(err){
+  console.log(err);
+}
