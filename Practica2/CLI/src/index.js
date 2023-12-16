@@ -1,10 +1,16 @@
-import { db_root } from './db.js';
-
+import { EliminarRegistro } from './crudbd/eliminar.js';
 //prueba de conexion
-try {
-  const connection1 = await db_root.getConnection();
-  const [rows1, fields1] = await connection1.execute('SELECT * FROM USER');
-  console.log(rows1);
-}catch(err){
-  console.log(err);
-}
+// try {
+//   const connection1 = await db_root.getConnection();
+//   const [rows1, fields1] = await connection1.execute('SELECT * FROM USER');
+//   console.log(rows1);
+// }catch(err){
+//   console.log(err);
+// }
+
+//Registro();
+// MenuHospital({usuario: 'admin'})
+// ActualizarRegistro({usuario: 'admin'});
+// AgregarRegistro({usuario: 'admin'});
+// ConsultarRegistro({usuario: 'admin'});
+EliminarRegistro({usuario: 'admin'});
