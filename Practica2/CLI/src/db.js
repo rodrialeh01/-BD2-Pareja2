@@ -19,3 +19,12 @@ export const db_users = (user, password) => {
         port: process.env.DB_PORT
     });
 };
+
+export const db_login = (user, password) => {
+    return mysql.createPool({
+        host: process.env.DB_HOST,
+        user: user,
+        password: password,
+        port: process.env.DB_PORT
+    });
+};
