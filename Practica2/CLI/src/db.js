@@ -15,7 +15,7 @@ export const db_users = (user, password) => {
         host: process.env.DB_HOST,
         user: user,
         password: password,
-        database: process.env.DB_ROOT_NAME,
+        database: process.env.DB_NAME,
         port: process.env.DB_PORT
     });
 };
