@@ -53,7 +53,8 @@ export const Login = async () => {
             }
         });
     } catch (err) {
-        console.log(err);
+        
+        console.log(`${color(255, 0, 0)} ${err.message}`);
         console.log(`${color(255, 0, 0)}ERROR AL INICIAR SESION\x1b[0m`);
         MenuPrincipal();
     }
