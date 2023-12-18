@@ -1,7 +1,9 @@
 import inquirer from 'inquirer';
+import { db_root, db_users } from '../db.js';
+import { MenuHospital } from '../menu_hospital/menuPrincipal.js';
 import { color } from '../utils/index.js';
 
-export const AgregarRegistro = ({usuario}) => {
+export const AgregarRegistro = ({usuario}, {password}) => {
     console.log(`${color(66,135,245)}------------------BIENVENIDO ${usuario}------------------\x1b[0m`);
     inquirer.prompt([
         {
@@ -60,8 +62,29 @@ export const AgregarRegistro = ({usuario}) => {
                         }
                     ]
                 }
-            ]).then((answers) => {
-                console.log(answers);
+            ]).then(async(answers) => {
+                if(answers.id_paciente == '' || answers.edad == '' || answers.genero == ''){
+                    console.log(`${color(255, 0, 0)}ERROR: NO SE PERMITEN CAMPOS VACIOS\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }
+                try{
+                    const loguser = db_users(usuario, password);
+                    const connectionuser = await loguser.getConnection();
+                    await connectionuser.query(`INSERT INTO paciente (idPaciente, edad, genero) VALUES (?,?,?)`, [answers.id_paciente, answers.edad, answers.genero]);
+                    await connectionuser.release();
+
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Agregando un nuevo registro a paciente', NOW())`);
+                    await connRoot.release();
+
+                    console.log(`${color(37, 230, 78)}SE AGREGÓ UN REGISTRO\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }catch(err){
+                    console.log(`${color(255, 0, 0)}ERROR: HUBO UN ERROR AL AGREGAR UN REGISTRO\x1b[0m`);
+                    console.log(`${color(255, 0, 0)}${err.message}\x1b[0m`)
+                    MenuHospital({usuario}, {password});
+                }
             });
         }else if(answers.op_menu == 2){
             inquirer.prompt([
@@ -75,8 +98,29 @@ export const AgregarRegistro = ({usuario}) => {
                     name: 'habitacion',
                     message: `${color(37, 230, 78)}INGRESE NOMBRE DE LA HABITACIÓN: \x1b[0m`
                 }
-            ]).then((answers) => {
-                console.log(answers);
+            ]).then(async (answers) => {
+                if(answers.habitacion == '' || answers.id_habitacion == ''){
+                    console.log(`${color(255, 0, 0)}ERROR: NO SE PERMITEN CAMPOS VACIOS\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }
+                try{
+                    const loguser = db_users(usuario, password);
+                    const connectionuser = await loguser.getConnection();
+                    await connectionuser.query(`INSERT INTO habitacion (idHabitacion, habitacion) VALUES (?,?)`, [answers.id_habitacion, answers.habitacion]);
+                    await connectionuser.release();
+
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Agregando un nuevo registro a habitacion', NOW())`);
+                    await connRoot.release();
+
+                    console.log(`${color(37, 230, 78)}SE AGREGÓ UN REGISTRO\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }catch(err){
+                    console.log(`${color(255, 0, 0)}ERROR: HUBO UN ERROR AL AGREGAR UN REGISTRO\x1b[0m`);
+                    console.log(`${color(255, 0, 0)}${err.message}\x1b[0m`)
+                    MenuHospital({usuario}, {password});
+                }
             });
         }else if(answers.op_menu == 3){
             inquirer.prompt([
@@ -95,8 +139,29 @@ export const AgregarRegistro = ({usuario}) => {
                     name: 'id_habitacion',
                     message: `${color(37, 230, 78)}INGRESE ID DE LA HABITACION: \x1b[0m`
                 }
-            ]).then((answers) => {
-                console.log(answers);
+            ]).then(async(answers) => {
+                if(answers.actividad == '' || answers.id_paciente == '' || answers.id_habitacion == ''){
+                    console.log(`${color(255, 0, 0)}ERROR: NO SE PERMITEN CAMPOS VACIOS\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }
+                try{
+                    const loguser = db_users(usuario, password);
+                    const connectionuser = await loguser.getConnection();
+                    await connectionuser.query(`INSERT INTO log_actividad (timestampx, actividad, idPaciente, idHabitacion) VALUES (?,?,?,?)`, ['NOW()',answers.actividad, answers.id_paciente, answers.id_habitacion]);
+                    await connectionuser.release();
+
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Agregando un nuevo registro a log_actividad', NOW())`);
+                    await connRoot.release();
+
+                    console.log(`${color(37, 230, 78)}SE AGREGÓ UN REGISTRO\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }catch(err){
+                    console.log(`${color(255, 0, 0)}ERROR: HUBO UN ERROR AL AGREGAR UN REGISTRO\x1b[0m`);
+                    console.log(`${color(255, 0, 0)}${err.message}\x1b[0m`)
+                    MenuHospital({usuario}, {password});
+                }
             });
         }else if(answers.op_menu == 4){
             inquirer.prompt([
@@ -110,8 +175,29 @@ export const AgregarRegistro = ({usuario}) => {
                     name: 'id_habitacion',
                     message: `${color(37, 230, 78)}INGRESE ID DE LA HABITACION: \x1b[0m`
                 }
-            ]).then((answers) => {
-                console.log(answers);
+            ]).then(async(answers) => {
+                if(answers.status == '' || answers.id_habitacion == ''){
+                    console.log(`${color(255, 0, 0)}ERROR: NO SE PERMITEN CAMPOS VACIOS\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }
+                try{
+                    const loguser = db_users(usuario, password);
+                    const connectionuser = await loguser.getConnection();
+                    await connectionuser.query(`INSERT INTO log_habitacion (timestampx, statusx, idHabitacion) VALUES (?,?,?)`, ['NOW()',answers.status, answers.id_habitacion]);
+                    await connectionuser.release();
+
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Agregando un nuevo registro a log_habitacion', NOW())`);
+                    await connRoot.release();
+
+                    console.log(`${color(37, 230, 78)}SE AGREGÓ UN REGISTRO\x1b[0m`);
+                    MenuHospital({usuario}, {password});
+                }catch(err){
+                    console.log(`${color(255, 0, 0)}ERROR: HUBO UN ERROR AL AGREGAR UN REGISTRO\x1b[0m`);
+                    console.log(`${color(255, 0, 0)}${err.message}\x1b[0m`)
+                    MenuHospital({usuario}, {password});
+                }
             });
         }
     });

@@ -1,11 +1,14 @@
 import inquirer from 'inquirer';
-import { color } from '../utils/index.js';
+import { ActualizarRegistro } from '../crudbd/actualizar.js';
+import { AgregarRegistro } from '../crudbd/agregar.js';
+import { ConsultarRegistro } from '../crudbd/consulta.js';
+import { EliminarRegistro } from '../crudbd/eliminar.js';
+import { db_root } from '../db.js';
 import { Login } from '../pantalla_inicial/login.js';
 import { HacerRespaldo } from '../respaldos/HacerRespaldo.js';
-import { VerRespaldo } from '../respaldos/VerRespaldo.js';
 import { RestaurarRespaldo } from '../respaldos/RestaurarRespaldo.js';
-import { db_users, db_root } from '../db.js';
-import { ConsultarRegistro } from '../crudbd/consulta.js';
+import { VerRespaldo } from '../respaldos/VerRespaldo.js';
+import { color } from '../utils/index.js';
 
 export const MenuHospital = ({ usuario }, {password}) => {
     console.log(`${color(66, 135, 245)}------------------BIENVENIDO ${usuario}------------------\x1b[0m`);
@@ -54,13 +57,13 @@ export const MenuHospital = ({ usuario }, {password}) => {
             ConsultarRegistro({ usuario }, {password});
         }
         else if (answers.op_menu == 2) {
-            console.log(answers);
+            ActualizarRegistro({ usuario }, {password})
         }
         else if (answers.op_menu == 3) {
-            console.log(answers);
+            AgregarRegistro({ usuario }, {password})
         }
         else if (answers.op_menu == 4) {
-            console.log(answers);
+            EliminarRegistro({ usuario }, {password})
         }
         else if (answers.op_menu == 5) {
             try {

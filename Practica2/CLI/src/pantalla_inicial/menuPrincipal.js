@@ -1,8 +1,8 @@
 import inquirer from 'inquirer';
+import { Registro } from '../auth/registro.js';
+import { db_root } from '../db.js';
 import { color } from '../utils/index.js';
 import { Login } from './login.js';
-import { Registro } from '../auth/registro.js'
-import { db_root } from '../db.js';
 
 export const MenuPrincipal = async () => {
     CreateRoles();
@@ -41,7 +41,7 @@ export const MenuPrincipal = async () => {
 }
 
 async function CreateRoles() {
-    const query = `CREATE ROLE IF NOT EXISTS 'Administrador', 'Doctor';`;
+    const query = `CREATE ROLE IF NOT EXISTS 'Administrador', 'Doctor', 'Soporte', 'Asistente';`;
 
     try {
         const connection = await db_root.getConnection();
