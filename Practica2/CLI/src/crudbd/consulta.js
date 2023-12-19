@@ -61,7 +61,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                         const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                         const rolUsuario = roles[rolUser - 1];
-                        console.log(rolUsuario);
+                        
                         connRoot.release();
                         await connection.execute(`SET ROLE '${rolUsuario}'`);
                     } catch (err) {
@@ -70,7 +70,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión en ver consultas.', NOW())`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión en ver consultas', NOW())`);
                         await connRoot.release();
 
 
@@ -103,7 +103,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al realizar la consulta.', NOW())`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al realizar la consulta', NOW())`);
                         await connRoot.release();
 
                         MenuHospital({ usuario }, { password });
@@ -140,7 +140,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log('\n');
                                 const connRoot = await db_root.getConnection();
                                 await connRoot.query(`USE ${process.env.DB_NAME}`);
-                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión en ver consultas.', NOW())`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión en ver consultas', NOW())`);
                                 await connRoot.release();
                                 MenuHospital({ usuario }, { password });
                             }
@@ -166,7 +166,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log('\n');
                                 const connRoot = await db_root.getConnection();
                                 await connRoot.query(`USE ${process.env.DB_NAME}`);
-                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.' , NOW())`);
+                                const escapedError = (err.message).replace(/'/g, "''");
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}' , NOW())`);
                                 await connRoot.release();
                                 MenuHospital({ usuario }, { password });
                             }
@@ -179,7 +180,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                             console.log('\n');
                             const connRoot = await db_root.getConnection();
                             await connRoot.query(`USE ${process.env.DB_NAME}`);
-                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            const escapedError = (err.message).replace(/'/g, "''");
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                             await connRoot.release();
                             MenuHospital({ usuario }, { password });
                         }
@@ -197,7 +199,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                         const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                         const rolUsuario = roles[rolUser - 1];
-                        console.log(rolUsuario);
+                        
                         connRoot.release();
                         await connection.execute(`SET ROLE '${rolUsuario}'`);
 
@@ -208,7 +210,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log('\n');
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        const escapedError = (err.message).replace(/'/g, "''");
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                         await connRoot.release();
                         MenuHospital({ usuario }, { password });
                     }
@@ -239,7 +242,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log('\n');
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}. ', NOW())`);
+                        const escapedError = (err.message).replace(/'/g, "''");
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                         await connRoot.release();
 
                         MenuHospital({ usuario }, { password });
@@ -265,7 +269,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                                 const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                                 const rolUsuario = roles[rolUser - 1];
-                                console.log(rolUsuario);
+                                
                                 connRoot.release();
                                 await connection.execute(`SET ROLE '${rolUsuario}'`);
 
@@ -276,7 +280,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log('\n');
                                 const connRoot = await db_root.getConnection();
                                 await connRoot.query(`USE ${process.env.DB_NAME}`);
-                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                                const escapedError = (err.message).replace(/'/g, "''");
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                                 await connRoot.release();
 
                                 MenuHospital({ usuario }, { password });
@@ -305,7 +310,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                             console.log('\n');
                             const connRoot = await db_root.getConnection();
                             await connRoot.query(`USE ${process.env.DB_NAME}`);
-                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            const escapedError = (err.message).replace(/'/g, "''");
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                             await connRoot.release();
 
                             MenuHospital({ usuario }, { password });
@@ -324,7 +330,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                         const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                         const rolUsuario = roles[rolUser - 1];
-                        console.log(rolUsuario);
+                        
                         connRoot.release();
                         await connection.execute(`SET ROLE '${rolUsuario}'`);
 
@@ -335,7 +341,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log('\n');
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        const escapedError = (err.message).replace(/'/g, "''");
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] -${escapedError}', NOW())`);
                         await connRoot.release();
 
                         MenuHospital({ usuario }, { password });
@@ -367,7 +374,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log('\n');
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        const escapedError = (err.message).replace(/'/g, "''");
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] -${escapedError}', NOW())`);
                         await connRoot.release();
 
                         MenuHospital({ usuario }, { password });
@@ -393,7 +401,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                                 const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                                 const rolUsuario = roles[rolUser - 1];
-                                console.log(rolUsuario);
+                                
                                 connRoot.release();
                                 await connection.execute(`SET ROLE '${rolUsuario}'`);
 
@@ -404,7 +412,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log('\n');
                                 const connRoot = await db_root.getConnection();
                                 await connRoot.query(`USE ${process.env.DB_NAME}`);
-                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                                const escapedError = (err.message).replace(/'/g, "''");
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                                 await connRoot.release();
 
                                 MenuHospital({ usuario }, { password });
@@ -433,7 +442,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                             console.log('\n');
                             const connRoot = await db_root.getConnection();
                             await connRoot.query(`USE ${process.env.DB_NAME}`);
-                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            const escapedError = (err.message).replace(/'/g, "''");
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                             await connRoot.release();
 
                             MenuHospital({ usuario }, { password });
@@ -452,7 +462,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                         const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                         const rolUsuario = roles[rolUser - 1];
-                        console.log(rolUsuario);
+                        
                         connRoot.release();
                         await connection.execute(`SET ROLE '${rolUsuario}'`);
 
@@ -465,7 +475,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        const escapedError = (err.message).replace(/'/g, "''");
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                         await connRoot.release();
                         MenuHospital({ usuario }, { password });
                     }
@@ -496,7 +507,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log('\n');
                         const connRoot = await db_root.getConnection();
                         await connRoot.query(`USE ${process.env.DB_NAME}`);
-                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        const escapedError = (err.message).replace(/'/g, "''");
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                         await connRoot.release();
 
                         MenuHospital({ usuario }, { password });
@@ -508,7 +520,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         {
                             type: 'number',
                             name: 'id_paciente',
-                            message: `${color(37, 230, 78)}INGRESE ID DE LA HABITACIÓN EN LOG_HABITACION: \x1b[0m`
+                            message: `${color(37, 230, 78)}INGRESE ID DEL LOG_HABITACIÓN: \x1b[0m`
                         }
                     ]).then(async (answers3) => {
                         const dataUser2 = db_login(usuario, password);
@@ -522,7 +534,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
 
                                 const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
                                 const rolUsuario = roles[rolUser - 1];
-                                console.log(rolUsuario);
+                                
                                 connRoot.release();
                                 await connection.execute(`SET ROLE '${rolUsuario}'`);
 
@@ -533,14 +545,15 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log('\n');
                                 const connRoot = await db_root.getConnection();
                                 await connRoot.query(`USE ${process.env.DB_NAME}`);
-                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                                const escapedError = (err.message).replace(/'/g, "''");
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                                 await connRoot.release();
 
                                 MenuHospital({ usuario }, { password });
                             }
                         }
                         try {
-                            const query = `SELECT * FROM log_habitacion WHERE idHabitacion = ${answers3.id_paciente}`;
+                            const query = `SELECT * FROM log_habitacion WHERE id_log_habitacion = ${answers3.id_paciente}`;
                             await connection.query(`USE ${process.env.DB_NAME}`);
                             let res = await connection.query(query);
                             await connection.release();
@@ -562,7 +575,8 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                             console.log('\n');
                             const connRoot = await db_root.getConnection();
                             await connRoot.query(`USE ${process.env.DB_NAME}`);
-                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            const escapedError = (err.message).replace(/'/g, "''");
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${escapedError}', NOW())`);
                             await connRoot.release();
                             
                             MenuHospital({ usuario }, { password });

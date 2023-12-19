@@ -166,6 +166,14 @@ export const MenuHospital = ({ usuario }, { password }) => {
             } catch (err) {
                 console.log(`${color(255, 0, 0)} ${err.message}`);
                 console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
+                const connRoot = await db_root.getConnection();
+                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión.', NOW())`);
+                await connRoot.release();
+                
+                MenuHospital({ usuario }, { password });
+
             }
         }
         else if (answers.op_menu == 8) {
