@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-export const HacerRespaldo = ({ usuario }, {password}) => {
+export const HacerRespaldo = ({ usuario }, { password }) => {
     console.log(`${color(66, 135, 245)}------------------CREACIÓN DE BACKUP------------------\x1b[0m`);
     inquirer.prompt([
         {
@@ -35,46 +35,46 @@ export const HacerRespaldo = ({ usuario }, {password}) => {
             await connRoot.query(`USE ${process.env.DB_NAME}`);
             await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Creación de Backup Completo', NOW())`);
             await connRoot.release();
-            
+
             const dataUser = db_users(usuario, password);
             const connection = await dataUser.getConnection();
 
             await connection.query(`USE ${process.env.DB_NAME}`);
 
-            let id = await connection.query(`SELECT MAX(idBackup) AS id FROM backups`);
-            if (id[0][0].id == null) {
-                id = 1;
-            }
-            else {
-                id = id[0][0].id + 1;
-            }
-            let nombreBackup = `backup${id}.sql`;
+            const now = new Date();
 
-            
-            const backupFilePath = path.join(__dirname, `../backups/${nombreBackup}`);
+            const dd = String(now.getDate()).padStart(2, '0');
+            const MM = String(now.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+            const YYYY = now.getFullYear();
+            const HH = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
 
+            let date = `${dd}-${MM}-${YYYY}_${HH}_${mm}_${ss}`;
+            console.log(date);
 
-            let query = `mysqldump -u ${usuario} -p${password} ${process.env.DB_NAME} > ${nombreBackup}`;
+            let nombreBackup = `backup${date}.sql`;
+            let query = `mysqldump -u ${usuario} -p${password} ${process.env.DB_NAME} > ./backups/${nombreBackup}`;
             await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraAccion) VALUES ('${nombreBackup}', NOW())`);
+            let move = `cd backups`;
             exec(query, (err, stdout, stderr) => {
                 if (err) {
                     console.log(err);
                     console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                     connection.release();
-                    MenuPrincipal();
                 }
                 else {
                     console.log(`${color(37, 230, 78)}SE HA CREADO EL BACKUP (${nombreBackup}) CON EXITO\x1b[0m`);
                     connection.query(`INSERT INTO backups (nombreBackup, fechaHoraBackup) VALUES ('${nombreBackup}', NOW())`);
                     connection.release();
-                    MenuHospital({ usuario }, {password});
+                    MenuHospital({ usuario }, { password });
                 }
             }
             );
 
 
         } else if (answers.op_menu == false) {
-            MenuHospital({ usuario }, {password});
+            MenuHospital({ usuario }, { password });
         }
     });
 }

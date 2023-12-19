@@ -9,6 +9,7 @@ import { HacerRespaldo } from '../respaldos/HacerRespaldo.js';
 import { RestaurarRespaldo } from '../respaldos/RestaurarRespaldo.js';
 import { VerRespaldo } from '../respaldos/VerRespaldo.js';
 import { color } from '../utils/index.js';
+import { MenuPrincipal } from '../pantalla_inicial/menuPrincipal.js';
 
 export const MenuHospital = ({ usuario }, {password}) => {
     console.log(`${color(66, 135, 245)}------------------BIENVENIDO ${usuario}------------------\x1b[0m`);
@@ -133,10 +134,10 @@ export const MenuHospital = ({ usuario }, {password}) => {
                 }
                 connRoot.release();
                 if (verificacionAdmin) {
-                    RestaurarRespaldo({ usuario });
+                    RestaurarRespaldo({ usuario }, {password});
                 } else {
                     console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
-                    MenuHospital({ usuario });
+                    MenuHospital({ usuario }, {password});
                 }
 
             } catch (err) {
@@ -145,7 +146,7 @@ export const MenuHospital = ({ usuario }, {password}) => {
             }
         }
         else if (answers.op_menu == 8) {
-            Login();
+            MenuPrincipal();
         }
 
     });
