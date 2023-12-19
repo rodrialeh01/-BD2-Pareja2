@@ -3,12 +3,6 @@ import { color } from '../utils/index.js';
 import { MenuHospital } from '../menu_hospital/menuPrincipal.js';
 import { db_users, db_root } from '../db.js';
 import { exec } from 'child_process';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 
 export const HacerRespaldo = ({ usuario }, { password }) => {
     console.log(`${color(66, 135, 245)}------------------CREACIÓN DE BACKUP------------------\x1b[0m`);
@@ -57,16 +51,19 @@ export const HacerRespaldo = ({ usuario }, { password }) => {
             let query = `mysqldump -u ${usuario} -p${password} ${process.env.DB_NAME} > ./backups/${nombreBackup}`;
             await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraAccion) VALUES ('${nombreBackup}', NOW())`);
             let move = `cd backups`;
-            exec(query, (err, stdout, stderr) => {
+            exec(query, async (err, stdout, stderr) => {
                 if (err) {
                     console.log(err);
                     console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
-                    connection.release();
+                    console.log(`${color(255, 0, 0)}BACKUP NO CREADO\x1b[0m`);
+
+                    await connection.execute(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Creación de Backup Fallida', NOW())`);
+                    await connection.release();
                 }
                 else {
                     console.log(`${color(37, 230, 78)}SE HA CREADO EL BACKUP (${nombreBackup}) CON EXITO\x1b[0m`);
-                    connection.query(`INSERT INTO backups (nombreBackup, fechaHoraBackup) VALUES ('${nombreBackup}', NOW())`);
-                    connection.release();
+                    await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraBackup) VALUES ('${nombreBackup}', NOW())`);
+                    await connection.release();
                     MenuHospital({ usuario }, { password });
                 }
             }

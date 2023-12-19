@@ -68,6 +68,12 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         await connection.release();
                         console.log(`${color(255, 0, 0)} ${err.message}`);
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión en ver consultas.', NOW())`);
+                        await connRoot.release();
+
+
                         MenuHospital({ usuario }, { password });
                     }
                 }
@@ -94,7 +100,14 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                     } catch (err) {
                         await connection.release();
                         console.log(`${color(255, 0, 0)} ${err.message}`);
+
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al realizar la consulta.', NOW())`);
+                        await connRoot.release();
+
                         MenuHospital({ usuario }, { password });
+
                     }
 
                 } else if (answers.op == 2) {
@@ -123,25 +136,40 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                             } catch (err) {
                                 await connection.release();
                                 console.log(`${color(255, 0, 0)} ${err.message}`);
-                                console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                                console.log(`${color(255, 0, 0)}[ERROR] - Se reiniciará la aplicación \x1b[0m`);
                                 console.log('\n');
+                                const connRoot = await db_root.getConnection();
+                                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión en ver consultas.', NOW())`);
+                                await connRoot.release();
                                 MenuHospital({ usuario }, { password });
                             }
                         }
                         try {
                             const query = `SELECT * FROM paciente WHERE idPaciente = ${answers3.id_paciente}`;
                             await connection.query(`USE ${process.env.DB_NAME}`);
-                            let res = await connection.query(query);
-                            await connection.release();
+                            try {
+                                let res = await connection.query(query);
+                                await connection.release();
 
-                            console.log(`${color(37, 230, 78)}CONSULTA EXITOSA\x1b[0m`);
-                            console.table(res[0]);
+                                console.log(`${color(37, 230, 78)}CONSULTA EXITOSA\x1b[0m`);
+                                console.table(res[0]);
 
-                            const connRoot = await db_root.getConnection();
-                            await connRoot.query(`USE ${process.env.DB_NAME}`);
-                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Consulta específica de pacientes', NOW())`);
-                            await connRoot.release();
-
+                                const connRoot = await db_root.getConnection();
+                                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Consulta específica de pacientes', NOW())`);
+                                await connRoot.release();
+                            } catch (err) {
+                                await connection.release();
+                                console.log(`${color(255, 0, 0)} ${err.message}`);
+                                console.log(`${color(255, 0, 0)}[ERROR] - ${err.message}. \x1b[0m`);
+                                console.log('\n');
+                                const connRoot = await db_root.getConnection();
+                                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.' , NOW())`);
+                                await connRoot.release();
+                                MenuHospital({ usuario }, { password });
+                            }
                             MenuHospital({ usuario }, { password });
 
                         } catch (err) {
@@ -149,6 +177,10 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                             console.log(`${color(255, 0, 0)} ${err.message}`);
                             console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                             console.log('\n');
+                            const connRoot = await db_root.getConnection();
+                            await connRoot.query(`USE ${process.env.DB_NAME}`);
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            await connRoot.release();
                             MenuHospital({ usuario }, { password });
                         }
                     });
@@ -174,6 +206,10 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log(`${color(255, 0, 0)} ${err.message}`);
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                         console.log('\n');
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        await connRoot.release();
                         MenuHospital({ usuario }, { password });
                     }
                 }
@@ -199,8 +235,13 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                     } catch (err) {
                         await connection.release();
                         console.log(`${color(255, 0, 0)} ${err.message}`);
-                        console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                        console.log(`${color(255, 0, 0)}[ERROR] - Error al intentar realizar la consulta. \x1b[0m`);
                         console.log('\n');
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}. ', NOW())`);
+                        await connRoot.release();
+
                         MenuHospital({ usuario }, { password });
                     }
 
@@ -233,6 +274,11 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log(`${color(255, 0, 0)} ${err.message}`);
                                 console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                                 console.log('\n');
+                                const connRoot = await db_root.getConnection();
+                                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                                await connRoot.release();
+
                                 MenuHospital({ usuario }, { password });
                             }
                         }
@@ -255,6 +301,13 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         } catch (err) {
                             await connection.release();
                             console.log(`${color(255, 0, 0)} ${err.message}`);
+                            console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                            console.log('\n');
+                            const connRoot = await db_root.getConnection();
+                            await connRoot.query(`USE ${process.env.DB_NAME}`);
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            await connRoot.release();
+
                             MenuHospital({ usuario }, { password });
                         }
                     });
@@ -280,6 +333,11 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         console.log(`${color(255, 0, 0)} ${err.message}`);
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                         console.log('\n');
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        await connRoot.release();
+
                         MenuHospital({ usuario }, { password });
                     }
                 }
@@ -305,6 +363,13 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                     } catch (err) {
                         await connection.release();
                         console.log(`${color(255, 0, 0)} ${err.message}`);
+                        console.log(`${color(255, 0, 0)}[ERROR] - Error al intentar realizar la consulta. \x1b[0m`);
+                        console.log('\n');
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        await connRoot.release();
+
                         MenuHospital({ usuario }, { password });
                     }
 
@@ -337,6 +402,11 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log(`${color(255, 0, 0)} ${err.message}`);
                                 console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                                 console.log('\n');
+                                const connRoot = await db_root.getConnection();
+                                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                                await connRoot.release();
+
                                 MenuHospital({ usuario }, { password });
                             }
                         }
@@ -359,6 +429,13 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         } catch (err) {
                             await connection.release();
                             console.log(`${color(255, 0, 0)} ${err.message}`);
+                            console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                            console.log('\n');
+                            const connRoot = await db_root.getConnection();
+                            await connRoot.query(`USE ${process.env.DB_NAME}`);
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            await connRoot.release();
+
                             MenuHospital({ usuario }, { password });
                         }
                     });
@@ -383,6 +460,14 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         await connection.release();
                         console.log(`${color(255, 0, 0)} ${err.message}`);
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                        console.log('\n');
+
+
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        await connRoot.release();
+                        MenuHospital({ usuario }, { password });
                     }
                 }
                 if (answers.op == 1) {
@@ -407,6 +492,13 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                     } catch (err) {
                         await connection.release();
                         console.log(`${color(255, 0, 0)} ${err.message}`);
+                        console.log(`${color(255, 0, 0)}[ERROR] - Error al intentar realizar la consulta. \x1b[0m`);
+                        console.log('\n');
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                        await connRoot.release();
+
                         MenuHospital({ usuario }, { password });
                     }
 
@@ -439,6 +531,11 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                                 console.log(`${color(255, 0, 0)} ${err.message}`);
                                 console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                                 console.log('\n');
+                                const connRoot = await db_root.getConnection();
+                                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                                await connRoot.release();
+
                                 MenuHospital({ usuario }, { password });
                             }
                         }
@@ -461,6 +558,13 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                         } catch (err) {
                             await connection.release();
                             console.log(`${color(255, 0, 0)} ${err.message}`);
+                            console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                            console.log('\n');
+                            const connRoot = await db_root.getConnection();
+                            await connRoot.query(`USE ${process.env.DB_NAME}`);
+                            await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - ${err.message}.', NOW())`);
+                            await connRoot.release();
+                            
                             MenuHospital({ usuario }, { password });
                         }
                     });

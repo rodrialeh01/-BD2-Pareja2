@@ -39,12 +39,14 @@ export const VerRespaldo = ({usuario}, {password}) => {
                 const data2 = await connection.query(`SELECT * FROM backups`);
                 if (data2[0].length == 0) {
                     console.log(`${color(255, 0, 0)}NO HAY RESPALDOS CREADOS\x1b[0m`);
-                    connection.release();
+                    await connection.execute(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Ver Backups Fallida', NOW())`);
+
+                    await connection.release();
                     MenuHospital({usuario}, {password});
                 } else {
                     console.log(`${color(37, 230, 78)}------------------RESPALDOS CREADOS------------------\x1b[0m`);
                     console.table(data2[0]);
-                    connection.release();
+                    await connection.release();
                     MenuHospital({usuario}, {password});
                 }
             }

@@ -11,7 +11,7 @@ import { VerRespaldo } from '../respaldos/VerRespaldo.js';
 import { color } from '../utils/index.js';
 import { MenuPrincipal } from '../pantalla_inicial/menuPrincipal.js';
 
-export const MenuHospital = ({ usuario }, {password}) => {
+export const MenuHospital = ({ usuario }, { password }) => {
     console.log(`${color(66, 135, 245)}------------------BIENVENIDO ${usuario}------------------\x1b[0m`);
     inquirer.prompt([
         {
@@ -55,22 +55,22 @@ export const MenuHospital = ({ usuario }, {password}) => {
         }
     ]).then(async (answers) => {
         if (answers.op_menu == 1) {
-            ConsultarRegistro({ usuario }, {password});
+            ConsultarRegistro({ usuario }, { password });
         }
         else if (answers.op_menu == 2) {
-            ActualizarRegistro({ usuario }, {password})
+            ActualizarRegistro({ usuario }, { password })
         }
         else if (answers.op_menu == 3) {
-            AgregarRegistro({ usuario }, {password})
+            AgregarRegistro({ usuario }, { password })
         }
         else if (answers.op_menu == 4) {
-            EliminarRegistro({ usuario }, {password})
+            EliminarRegistro({ usuario }, { password })
         }
         else if (answers.op_menu == 5) {
             try {
                 const connRoot = await db_root.getConnection();
                 await connRoot.query(`USE mysql`);
-                const [users, ] = await connRoot.execute('SELECT * FROM USER');
+                const [users,] = await connRoot.execute('SELECT * FROM USER');
 
                 let verificacionAdmin = false;
 
@@ -82,23 +82,36 @@ export const MenuHospital = ({ usuario }, {password}) => {
                 connRoot.release();
 
                 if (verificacionAdmin) {
-                    HacerRespaldo({ usuario }, {password});
+                    HacerRespaldo({ usuario }, { password });
                 } else {
                     console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
-                    MenuHospital({ usuario }, {password});
+                    console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear respado, no posee permisos suficientes.', NOW())`);
+                    await connRoot.release();
+                    MenuHospital({ usuario }, { password });
+                    MenuHospital({ usuario }, { password });
                 }
 
             } catch (err) {
                 console.log(`${color(255, 0, 0)} ${err.message}`);
                 console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+
+                console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
+                const connRoot = await db_root.getConnection();
+                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión.', NOW())`);
+                await connRoot.release();
+                MenuHospital({ usuario }, { password });
             }
         }
         else if (answers.op_menu == 6) {
             try {
                 const connRoot = await db_root.getConnection();
                 await connRoot.query(`USE mysql`);
-                const [users, ] = await connRoot.execute('SELECT * FROM USER');
-                
+                const [users,] = await connRoot.execute('SELECT * FROM USER');
+
                 let verificacionAdmin = false;
 
                 for (let i = 0; i < users.length; i++) {
@@ -108,22 +121,32 @@ export const MenuHospital = ({ usuario }, {password}) => {
                 }
                 connRoot.release();
                 if (verificacionAdmin) {
-                    VerRespaldo({ usuario }, {password});
+                    VerRespaldo({ usuario }, { password });
                 } else {
                     console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
-                    MenuHospital({ usuario }, {password});
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar ver los respados, no posee permisos suficientes.', NOW())`);
+                    await connRoot.release();
+                    MenuHospital({ usuario }, { password });
                 }
 
             } catch (err) {
                 console.log(`${color(255, 0, 0)} ${err.message}`);
                 console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
+                console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
+                const connRoot = await db_root.getConnection();
+                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar crear conexión.', NOW())`);
+                await connRoot.release();
+                MenuHospital({ usuario }, { password });
             }
         }
         else if (answers.op_menu == 7) {
             try {
                 const connRoot = await db_root.getConnection();
                 await connRoot.query(`USE mysql`);
-                const [users, ] = await connRoot.execute('SELECT * FROM USER');
+                const [users,] = await connRoot.execute('SELECT * FROM USER');
 
                 let verificacionAdmin = false;
 
@@ -134,10 +157,10 @@ export const MenuHospital = ({ usuario }, {password}) => {
                 }
                 connRoot.release();
                 if (verificacionAdmin) {
-                    RestaurarRespaldo({ usuario }, {password});
+                    RestaurarRespaldo({ usuario }, { password });
                 } else {
                     console.log(`${color(255, 0, 0)}[ERROR] - No tiene permisos para realizar esta accion \x1b[0m`);
-                    MenuHospital({ usuario }, {password});
+                    MenuHospital({ usuario }, { password });
                 }
 
             } catch (err) {

@@ -39,17 +39,21 @@ export const RestaurarRespaldo = ({usuario}, {password}) => {
                 let query = `mysql -u ${usuario} -p${password} ${process.env.DB_NAME} < ${nombreBackup}`;
                 await connection.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Restauración de Backup', NOW())`);
     
-                exec(query, (err, stdout, stderr) => {
+                 exec(query, async (err, stdout, stderr) =>  {
                     if (err) {
                         console.log(err);
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
-                        connection.release();
-                        MenuPrincipal();
+                        console.log(`${color(255, 0, 0)}BACKUP NO RESTAURADO\x1b[0m`);
+
+                        await connection.execute(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', 'Restauración de Backup Fallida', NOW())`);
+                        await connection.release();
+
+                        MenuHospital({ usuario }, { password });
                     }
                     else {
                         console.log(`${color(37, 230, 78)}BACKUP RESTAURADO EXITOSAMENTE\x1b[0m`);
                         
-                        connection.release();
+                        await connection.release();
                         MenuHospital({usuario}, {password});
                     }
                 });

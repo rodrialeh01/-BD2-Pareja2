@@ -63,6 +63,10 @@ export const Login = async () => {
                         console.log(`${color(255, 0, 0)}${err.message}`);
                         console.log(`${color(255, 0, 0)}[ERROR INTERNO] - Se reiniciará la aplicación \x1b[0m`);
                         console.log('\n');
+                        const connRoot = await db_root.getConnection();
+                        await connRoot.query(`USE ${process.env.DB_NAME}`);
+                        await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar ingresar LOG de inicio de Sesión', NOW())`);
+                        await connRoot.release();
                         MenuPrincipal();
                     }
 
@@ -77,12 +81,20 @@ export const Login = async () => {
                     console.log(`${color(255, 0, 0)} ${err.message}`);
                     console.log(`${color(255, 0, 0)}ERROR AL INICIAR SESION\x1b[0m`);
                     console.log('\n');
+                    const connRoot = await db_root.getConnection();
+                    await connRoot.query(`USE ${process.env.DB_NAME}`);
+                    await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar iniciar sesión', NOW())`);
+                    await connRoot.release();
                     MenuPrincipal();
                 }
             } catch (err) {
                 console.log(`${color(255, 0, 0)}${err.message}`);
                 console.log(`${color(255, 0, 0)}ERROR AL INICIAR SESION\x1b[0m`);
                 console.log('\n');
+                const connRoot = await db_root.getConnection();
+                await connRoot.query(`USE ${process.env.DB_NAME}`);
+                await connRoot.query(`INSERT INTO bitacora (nombreUsuario, accion, fechaHoraAccion) VALUES ('${usuario}', '[ERROR] - Error al intentar iniciar sesión', NOW())`);
+                await connRoot.release();
                 MenuPrincipal();
             }
 
