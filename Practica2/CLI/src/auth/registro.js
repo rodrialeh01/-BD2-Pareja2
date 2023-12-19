@@ -81,7 +81,7 @@ export const Registro = () => {
             //Lo agrega a la tabla de usuarios
             await connection1.execute(`INSERT INTO BD2P2.usuario(nombre, contrasenia, rol) VALUES(?, ?, ?)`, [answers.new_user, answers.new_password, answers.new_role]);
             //Lo agrega a la bitacora
-            await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES(?, ?, ?)`, [answers.admin_user, `Registro de usuario ${answers.new_user}`,'NOW()' ]);
+            await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES(${answers.admin_user}, 'Registro de usuario ${answers.new_user}',NOW()`);
             connection1.release();
             console.log(`${color(37, 230, 78)}REGISTRO EXITOSO\x1b[0m`);
             MenuPrincipal();

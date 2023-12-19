@@ -183,7 +183,7 @@ export const AgregarRegistro = ({ usuario }, { password }) => {
                         MenuHospital({ usuario }, { password });
                     }
                     try {
-                        await connectionuser.query(`INSERT INTO log_actividad (timestampx, actividad, idPaciente, idHabitacion) VALUES (?,?,?,?)`, ['NOW()', answers.actividad, answers.id_paciente, answers.id_habitacion]);
+                        await connectionuser.query(`INSERT INTO log_actividad (timestampx, actividad, idPaciente, idHabitacion) VALUES (NOW(), ${answers.actividad}, ${answers.id_paciente}, ${answers.id_habitacion}`);
                         await connectionuser.release();
 
                         const connRoot = await db_root.getConnection();
@@ -224,7 +224,7 @@ export const AgregarRegistro = ({ usuario }, { password }) => {
                         MenuHospital({ usuario }, { password });
                     }
                     try {
-                        await connectionuser.query(`INSERT INTO log_habitacion (timestampx, statusx, idHabitacion) VALUES (NOW(),?,?)`, [answers.status, answers.id_habitacion]);
+                        await connectionuser.query(`INSERT INTO log_habitacion (timestampx, statusx, idHabitacion) VALUES (NOW(),${answers.status},${answers.id_habitacion})`);
                         await connectionuser.release();
 
                         const connRoot = await db_root.getConnection();
