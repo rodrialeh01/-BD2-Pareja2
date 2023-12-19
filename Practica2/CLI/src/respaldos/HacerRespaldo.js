@@ -45,12 +45,9 @@ export const HacerRespaldo = ({ usuario }, { password }) => {
             const ss = String(now.getSeconds()).padStart(2, '0');
 
             let date = `${dd}-${MM}-${YYYY}_${HH}_${mm}_${ss}`;
-            console.log(date);
 
             let nombreBackup = `backup${date}.sql`;
             let query = `mysqldump -u ${usuario} -p${password} ${process.env.DB_NAME} > ./backups/${nombreBackup}`;
-            await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraAccion) VALUES ('${nombreBackup}', NOW())`);
-            let move = `cd backups`;
             exec(query, async (err, stdout, stderr) => {
                 if (err) {
                     console.log(err);
