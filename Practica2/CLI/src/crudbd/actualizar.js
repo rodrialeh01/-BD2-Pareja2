@@ -30,7 +30,6 @@ export const ActualizarRegistro = ({ usuario }, { password }) => {
             ]
         }
     ]).then(async (answers) => {
-        console.log(answers);
         try {
             const loguser = db_users(usuario, password);
             const connectionuser = await loguser.getConnection();
