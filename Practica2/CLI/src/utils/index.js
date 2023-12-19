@@ -22,3 +22,8 @@ export const obtenerRolUser = async (usuario) => {
     connRoot.release();
     return rolUsuario;
 }
+
+export const verificaFormatoFechaHora = (input) => {
+    var regex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}$/;  
+    return regex.test(input);
+}

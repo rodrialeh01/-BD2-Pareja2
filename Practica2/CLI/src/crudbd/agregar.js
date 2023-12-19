@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import { db_root, db_users } from '../db.js';
 import { MenuHospital } from '../menu_hospital/menuPrincipal.js';
-import { color } from '../utils/index.js';
+import { color, obtenerRolUser } from '../utils/index.js';
 
 export const AgregarRegistro = ({usuario}, {password}) => {
     console.log(`${color(66,135,245)}------------------BIENVENIDO ${usuario}------------------\x1b[0m`);
@@ -70,7 +70,12 @@ export const AgregarRegistro = ({usuario}, {password}) => {
                 try{
                     const loguser = db_users(usuario, password);
                     const connectionuser = await loguser.getConnection();
-                    await connectionuser.query(`INSERT INTO paciente (idPaciente, edad, genero) VALUES (?,?,?)`, [answers.id_paciente, answers.edad, answers.genero]);
+                    obtenerRolUser(usuario)
+                    .then(async (rol) => {
+                        await connectionuser.query(`SET ROLE ${rol}`)
+                        await connectionuser.query(`INSERT INTO paciente (idPaciente, edad, genero) VALUES (?,?,?)`, [answers.id_paciente, answers.edad, answers.genero]);
+                    })
+                    
                     await connectionuser.release();
 
                     const connRoot = await db_root.getConnection();
@@ -106,7 +111,12 @@ export const AgregarRegistro = ({usuario}, {password}) => {
                 try{
                     const loguser = db_users(usuario, password);
                     const connectionuser = await loguser.getConnection();
-                    await connectionuser.query(`INSERT INTO habitacion (idHabitacion, habitacion) VALUES (?,?)`, [answers.id_habitacion, answers.habitacion]);
+                    obtenerRolUser(usuario)
+                    .then(async (rol) => {
+                        await connectionuser.query(`SET ROLE ${rol}`)
+                        await connectionuser.query(`INSERT INTO habitacion (idHabitacion, habitacion) VALUES (?,?)`, [answers.id_habitacion, answers.habitacion]);
+                    })
+                    
                     await connectionuser.release();
 
                     const connRoot = await db_root.getConnection();
@@ -147,7 +157,12 @@ export const AgregarRegistro = ({usuario}, {password}) => {
                 try{
                     const loguser = db_users(usuario, password);
                     const connectionuser = await loguser.getConnection();
-                    await connectionuser.query(`INSERT INTO log_actividad (timestampx, actividad, idPaciente, idHabitacion) VALUES (?,?,?,?)`, ['NOW()',answers.actividad, answers.id_paciente, answers.id_habitacion]);
+                    obtenerRolUser(usuario)
+                    .then(async (rol) => {
+                        await connectionuser.query(`SET ROLE ${rol}`)
+                        await connectionuser.query(`INSERT INTO log_actividad (timestampx, actividad, idPaciente, idHabitacion) VALUES (?,?,?,?)`, ['NOW()',answers.actividad, answers.id_paciente, answers.id_habitacion]);
+                    })
+                    
                     await connectionuser.release();
 
                     const connRoot = await db_root.getConnection();
@@ -183,7 +198,12 @@ export const AgregarRegistro = ({usuario}, {password}) => {
                 try{
                     const loguser = db_users(usuario, password);
                     const connectionuser = await loguser.getConnection();
-                    await connectionuser.query(`INSERT INTO log_habitacion (timestampx, statusx, idHabitacion) VALUES (?,?,?)`, ['NOW()',answers.status, answers.id_habitacion]);
+                    obtenerRolUser(usuario)
+                    .then(async (rol) => {
+                        await connectionuser.query(`SET ROLE ${rol}`)
+                        await connectionuser.query(`INSERT INTO log_habitacion (timestampx, statusx, idHabitacion) VALUES (?,?,?)`, ['NOW()',answers.status, answers.id_habitacion]);
+                    })
+                    
                     await connectionuser.release();
 
                     const connRoot = await db_root.getConnection();
