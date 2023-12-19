@@ -62,7 +62,7 @@ export const HacerRespaldo = ({ usuario }, { password }) => {
                 }
                 else {
                     console.log(`${color(37, 230, 78)}SE HA CREADO EL BACKUP (${nombreBackup}) CON EXITO\x1b[0m`);
-                    await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraBackup) VALUES ('${nombreBackup}', NOW())`);
+                    await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraAccion) VALUES ('${nombreBackup}', NOW())`);
                     await connection.release();
                     MenuHospital({ usuario }, { password });
                 }
