@@ -6,5 +6,9 @@
 | 202010918 | Andrea María Cabrera Rosito |
 
 - ## Prácticas
-    - #### [`💻 Práctica 1`](./Practica1/)
-    - #### [`💻 Práctica 2`](./Practica2/)
+    - #### [`💻 Práctica 1`](./Practicas/Practica1/)
+    - #### [`💻 Práctica 2`](./Practicas//Practica2/)
+
+- ## Proyecto
+    - #### [`💻 Proyecto`](./Proyecto/)
+    

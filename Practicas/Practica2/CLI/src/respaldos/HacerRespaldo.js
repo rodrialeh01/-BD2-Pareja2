@@ -45,9 +45,11 @@ export const HacerRespaldo = ({ usuario }, { password }) => {
             const ss = String(now.getSeconds()).padStart(2, '0');
 
             let date = `${dd}-${MM}-${YYYY}_${HH}_${mm}_${ss}`;
+            
 
             let nombreBackup = `backup${date}.sql`;
             let query = `mysqldump -u ${usuario} -p${password} ${process.env.DB_NAME} > ./backups/${nombreBackup}`;
+            await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraAccion) VALUES ('${nombreBackup}', NOW())`);
             exec(query, async (err, stdout, stderr) => {
                 if (err) {
                     console.log(err);
@@ -59,7 +61,6 @@ export const HacerRespaldo = ({ usuario }, { password }) => {
                 }
                 else {
                     console.log(`${color(37, 230, 78)}SE HA CREADO EL BACKUP (${nombreBackup}) CON EXITO\x1b[0m`);
-                    await connection.query(`INSERT INTO backups (nombreBackup, fechaHoraAccion) VALUES ('${nombreBackup}', NOW())`);
                     await connection.release();
                     MenuHospital({ usuario }, { password });
                 }

@@ -83,7 +83,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                     //query para consultar todos los pacientes (máx. 25)
                     try {
                         await connection.query(`USE ${process.env.DB_NAME}`);
-                        let res = await connection.query(`SELECT * FROM paciente LIMIT 25`);
+                        let res = await connection.query(`SELECT * FROM paciente ORDER BY idPaciente DESC LIMIT 25`);
                         await connection.release();
 
                         console.log(`${color(37, 230, 78)}CONSULTA EXITOSA\x1b[0m`);
@@ -219,7 +219,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                 if (answers.op == 1) {
                     console.log(`${color(186, 85, 255)}CONSULTA GENERAL DE HABITACIONES: \x1b[0m`);
                     try {
-                        const query = `SELECT * FROM habitacion LIMIT 25`;
+                        const query = `SELECT * FROM habitacion ORDER BY idHabitacion DESC LIMIT 25`;
                         await connection.query(`USE ${process.env.DB_NAME}`);
                         let res = await connection.query(query);
                         await connection.release();
@@ -351,7 +351,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                 if (answers.op == 1) {
                     console.log(`${color(186, 85, 255)}CONSULTA GENERAL DE LOG_ACTIVIDAD: \x1b[0m`);
                     try {
-                        const query = `SELECT * FROM log_actividad LIMIT 25`;
+                        const query = `SELECT * FROM log_actividad ORDER BY id_log_actividad DESC LIMIT 25`;
                         await connection.query(`USE ${process.env.DB_NAME}`);
                         let res = await connection.query(query);
                         await connection.release();
@@ -484,7 +484,7 @@ export const ConsultarRegistro = async ({ usuario }, { password }) => {
                 if (answers.op == 1) {
                     console.log(`${color(186, 85, 255)}CONSULTA GENERAL DE LOG_HABITACION: \x1b[0m`);
                     try {
-                        const query = `SELECT * FROM log_habitacion LIMIT 25`;
+                        const query = `SELECT * FROM log_habitacion  ORDER BY id_log_habitacion DESC LIMIT 25`;
                         await connection.query(`USE ${process.env.DB_NAME}`);
                         let res = await connection.query(query);
                         await connection.release();
