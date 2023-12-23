@@ -47,11 +47,11 @@ CREATE TABLE backups (
 );
 
 SELECT * FROM log_habitacion;
-CREATE ROLE  'Asistente', 'Soporte';
+CREATE ROLE  'Administrador','Asistente','Doctor', 'Soporte';
 GRANT SELECT ON BD2P2.habitacion TO 'Asistente';
 GRANT SELECT ON BD2P2.paciente TO 'Asistente';
 GRANT SELECT ON BD2P2.paciente TO 'Doctor';
-GRANT UPDATE ON BD2P2.habitacion TO 'Asistente';
+GRANT UPDATE ON BD2P2.paciente TO 'Asistente';
 
 GRANT SELECT, UPDATE, INSERT ON BD2P2.log_actividad TO 'Soporte';
 GRANT SELECT, UPDATE, INSERT ON BD2P2.log_habitacion TO 'Soporte';

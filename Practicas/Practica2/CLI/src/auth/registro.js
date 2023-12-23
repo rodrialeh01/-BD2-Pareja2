@@ -58,33 +58,43 @@ export const Registro = () => {
             console.log(`${color(255, 0, 0)}ERROR: NO SE PERMITEN CAMPOS VACIOS\x1b[0m`);
             MenuPrincipal();
         }
-        //Verifica que el usuario administrador exista
-        if(answers.admin_user != 'admin' && answers.password_admin != 'admin'){
-            console.log(`${color(255, 0, 0)}ERROR: NO COINCIDE LAS CREDENCIALES DEL ADMINISTRADOR\x1b[0m`);
-            MenuPrincipal();
-        }
         try {
             const connection1 = await db_root.getConnection();
+            //Verifica que el usuario administrador exista
+            if(answers.admin_user !== 'admin' ){
+                await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES('admin', 'El Registro de usuario ${answers.new_user} fue rechazado, no coinciden las credenciales del administrador',NOW())`);
+                connection1.release();
+                console.log(`${color(255, 0, 0)}ERROR: NO COINCIDE LAS CREDENCIALES DEL ADMINISTRADOR\x1b[0m`);
+                MenuPrincipal();
+            }
+            if(answers.password_admin !== 'admin'){
+                await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES('admin', 'El Registro de usuario ${answers.new_user} fue rechazado, no coinciden las credenciales del administrador',NOW())`);
+                connection1.release();
+                console.log(`${color(255, 0, 0)}ERROR: NO COINCIDE LAS CREDENCIALES DEL ADMINISTRADOR\x1b[0m`);
+                MenuPrincipal();
+            }
             if(!answers.confirmacion){
-                await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES(?, ?, ?)`, [answers.admin_user, `El Registro de usuario ${answers.new_user} fue rechazado`,'NOW()' ]);
+                await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES('admin', 'El Registro de usuario ${answers.new_user} fue rechazado',NOW())`);
                 connection1.release();
                 console.log(`${color(255, 0, 0)}REGISTRO CANCELADO\x1b[0m`);
                 MenuPrincipal();
             }
-            const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
-            //Crear nuevo usuario
-            await connection1.execute(`CREATE USER '${answers.new_user}'@'localhost' IDENTIFIED BY '${answers.new_password}'`);
-            //Le da rol
-            await connection1.execute(`GRANT '${roles[answers.new_role-1]}' TO '${answers.new_user}'@'localhost'`);
-            //Actualiza privilegios
-            await connection1.execute(`FLUSH PRIVILEGES`);
-            //Lo agrega a la tabla de usuarios
-            await connection1.execute(`INSERT INTO BD2P2.usuario(nombre, contrasenia, rol) VALUES(?, ?, ?)`, [answers.new_user, answers.new_password, answers.new_role]);
-            //Lo agrega a la bitacora
-            await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES(${answers.admin_user}, 'Registro de usuario ${answers.new_user}',NOW()`);
-            connection1.release();
-            console.log(`${color(37, 230, 78)}REGISTRO EXITOSO\x1b[0m`);
-            MenuPrincipal();
+            if(answers.admin_user === 'admin' && answers.password_admin === 'admin' && answers.confirmacion){
+                const roles = ['Administrador', 'Asistente', 'Doctor', 'Soporte'];
+                //Crear nuevo usuario
+                await connection1.execute(`CREATE USER '${answers.new_user}'@'localhost' IDENTIFIED BY '${answers.new_password}'`);
+                //Le da rol
+                await connection1.execute(`GRANT '${roles[answers.new_role-1]}' TO '${answers.new_user}'@'localhost'`);
+                //Actualiza privilegios
+                await connection1.execute(`FLUSH PRIVILEGES`);
+                //Lo agrega a la tabla de usuarios
+                await connection1.execute(`INSERT INTO BD2P2.usuario(nombre, contrasenia, rol) VALUES(?, ?, ?)`, [answers.new_user, answers.new_password, answers.new_role]);
+                //Lo agrega a la bitacora
+                await connection1.execute(`INSERT INTO BD2P2.bitacora(nombreUsuario, accion, fechaHoraAccion) VALUES('admin', 'Registro de usuario ${answers.new_user}',NOW())`);
+                connection1.release();
+                console.log(`${color(37, 230, 78)}REGISTRO EXITOSO\x1b[0m`);
+                MenuPrincipal();
+            }
         }catch(err){
             console.log(`${color(255, 0, 0)}ERROR AL REGISTRAR EL USUARIO: \x1b[0m`);
             console.log(`${color(255, 0, 0)} ${err.message}`);
