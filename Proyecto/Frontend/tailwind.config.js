@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       colors:{
-        azullog: '#007ac2'
+        azullog: '#007ac2',
+        azuloscuro: '#040e1f'
       }
     },
   },

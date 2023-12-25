@@ -1,4 +1,4 @@
-import FormLogin from "../../components/FormLogin";
+import FormLogin from "../../components/Forms/FormLogin";
 const Login = () => {
     return (
         <div className="flex w-full h-screen">

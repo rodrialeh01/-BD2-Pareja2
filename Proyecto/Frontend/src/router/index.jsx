@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
-import SideBar from '../components/Sidebar';
+import SideBar from '../components/Sidebar/Sidebar';
+import Home from '../pages/Home/Home';
 import Login from '../pages/Login/Login';
 import Registro from '../pages/Registro/Registro';
 
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
         children:[
             {
                 path:'home',
-                element: null
+                element: <Home/>
             },
             {
                 path:'friends',
