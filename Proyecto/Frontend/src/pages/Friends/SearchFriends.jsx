@@ -4,6 +4,8 @@ export default function SearchFriends() {
   const [medicos, setMedicos] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [amigosdeamigos, setAmigosdeamigos] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
 
   useEffect(() => {
     setMedicos([
@@ -18,8 +20,8 @@ export default function SearchFriends() {
       },
       {
         nombreUsuario: "LisaMedica02",
-        nombre: "Lisa2",
-        apellido: "Medicina2",
+        nombre: "Maria",
+        apellido: "Pediatra",
         correo: "correo2@medicina.com",
         edad: 29,
         especialidad: "Pediatría",
@@ -27,6 +29,11 @@ export default function SearchFriends() {
       },
     ]);
   }, []);
+
+
+  const filteredMedicos = medicos.filter((medico) => {
+    return (medico.nombre.toLowerCase().includes(searchText.toLowerCase()) || medico.apellido.toLowerCase().includes(searchText.toLowerCase()));
+  });
 
   return (
     <>
@@ -64,7 +71,7 @@ export default function SearchFriends() {
                     className="block text-black font-bold md:text-left mb-1 md:mb-0 text-md"
                     htmlFor="inline-full-name"
                   >
-                    Nombre:
+                    Nombre Completo:
                   </label>
                 </div>
                 <div className="w-full mr-[20px]">
@@ -72,28 +79,10 @@ export default function SearchFriends() {
                     className="text-md bg-white appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
                     id="inline-full-name"
                     type="text"
-                    name="raza"
+                    name="nombreCompleto"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
                     placeholder="Nombre del médico"
-                  ></input>
-                </div>
-              </div>
-
-              <div className="md:flex md:items-center ">
-                <div className="">
-                  <label
-                    className="block text-black font-bold md:text-left mb-1 text-md md:mb-0"
-                    htmlFor="inline-full-name"
-                  >
-                    Apellido:
-                  </label>
-                </div>
-                <div className="w-full ">
-                  <input
-                    className="text-md bg-white appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
-                    id="inline-full-name"
-                    type="text"
-                    name="raza"
-                    placeholder="Apellido del médico"
                   ></input>
                 </div>
               </div>
@@ -106,7 +95,7 @@ export default function SearchFriends() {
               </h1>
             </div>
             <div className="w-full height-100 flex flex-wrap overflow-y-auto scrollbar-hide  justify-center mt-8">
-              {medicos.map((medico) => (
+              {filteredMedicos.map((medico) => (
                 <div className="h-auto w-1/3 max-w-xs bg-white shadow-lg shadow-[#007ac2]/50 rounded-lg overflow-hidden transition-all ease-out duration-300 hover:scale-105 p-2 m-3">
                   <div className="flex items-center justify-center">
                     <img
