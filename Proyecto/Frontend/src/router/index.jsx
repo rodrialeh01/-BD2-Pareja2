@@ -13,6 +13,7 @@ import MyFriends from "../pages/Friends/ListFriends";
 import SearchFriends from "../pages/Friends/SearchFriends";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
+import FriendProfile from "../pages/Profile/FriendProfile";
 import Profile from '../pages/Profile/Profile';
 import Registro from "../pages/Registro/Registro";
 
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
       {
         path:'myprofile',
         element:<Profile/>
+      },
+      {
+        path:'profile/:id',
+        element:<FriendProfile/>
       },
       {
         path:'editprofile',
