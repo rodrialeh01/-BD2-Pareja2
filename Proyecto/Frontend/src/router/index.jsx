@@ -4,6 +4,8 @@ import Chat from "../pages/Chat/Chat";
 import Consulta1 from "../pages/Consultas/Consulta1";
 import Consulta2 from "../pages/Consultas/Consulta2";
 import Consulta3 from "../pages/Consultas/Consulta3";
+import Consulta4 from "../pages/Consultas/Consulta4";
+import Consulta5 from "../pages/Consultas/Consulta5";
 import Consulta from "../pages/Consultas/SeleccionConsulta";
 import EditProfile from '../pages/EditProfile/EditProfile';
 import AddFriends from "../pages/Friends/AddFriends";
@@ -77,11 +79,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "consulta4",
-        element: null,
+        element: <Consulta4/>
       },
       {
         path: "consulta5",
-        element: null,
+        element: <Consulta5/>,
       },
     ],
   }
