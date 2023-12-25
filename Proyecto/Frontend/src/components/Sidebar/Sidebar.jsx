@@ -1,4 +1,4 @@
-import { ChevronFirst, ChevronLast, Home, LogOut, MessageCircle, Search, UserPlus, UsersRound } from 'lucide-react';
+import { ChevronFirst, ChevronLast, Home, LogOut, MessageCircle, Search, UserPlus, UsersRound, UserSearch } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 const SideBar = () => {
@@ -19,6 +19,11 @@ const SideBar = () => {
             icon:<UserPlus size={20} />,
             text:'Añadir Amigos',
             path:'/user/addfriends'
+        },
+        {
+            icon:<UserSearch size={20} />,
+            text:'Buscar Amigo',
+            path:'/user/searchfriends'
         },
         {
             icon:<MessageCircle size={20} />,
