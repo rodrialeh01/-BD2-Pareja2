@@ -12,7 +12,7 @@ export const MongoConfig = {
 
 export const Neo4jConfig = {
     host: process.env.DB_HOST,
-    user: process.env.DB_USER,
+    user: process.env.DB_NEO_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
     port: process.env.DB_PORT_NEO4J,
