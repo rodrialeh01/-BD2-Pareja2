@@ -95,5 +95,36 @@ export const mandarSolicitud = async (id, data) => {
     return response;
 }
 
+// obtener un doctor por su id
+export const getDoctor = async (id) => {
+    const response = await instance.get(`/doctor/getDoctor/${id}`);
+    return response;
+}
+
+// Consultas:
+export const getConsulta1 = async (id) => {
+    const response = await instance.get(`/consultas/getConsulta1`);
+    return response;
+}
+
+export const getConsulta2 = async (id) => {
+    const response = await instance.get(`/consultas/getConsulta2`);
+    return response;
+}
+
+export const getConsulta3 = async (id) => {
+    const response = await instance.get(`/consultas/getConsulta3`);
+    return response;
+}
+
+export const getConsulta4 = async (id) => {
+    const response = await instance.get(`/consultas/getConsulta4`);
+    return response;
+}
+
+export const getConsulta5 = async (id) => {
+    const response = await instance.get(`/consultas/getConsulta5`);
+    return response;
+}
 
 

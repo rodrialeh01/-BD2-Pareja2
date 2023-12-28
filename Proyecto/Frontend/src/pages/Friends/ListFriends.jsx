@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import SideBar from "../../components/Sidebar/Sidebar";
 import Service from "../../Service/Service";
+import { useNavigate } from "react-router-dom";
 export default function MyFriends() {
+  const navigate = useNavigate();
+
   const [medicos, setMedicos] = useState([]);
 
   useEffect(() => {
@@ -90,7 +93,9 @@ export default function MyFriends() {
 
                   <div className="flex items-center justify-center">
                     <div className=" flex w-auto justify-center items-center text-white font-bold py-2 px-4 rounded-full mx-1">
-                      <button className="bg-[#007ac2] hover:bg-blue-800 transition duration-300 text-white font-bold py-2 px-4 rounded">
+                      <button className="bg-[#007ac2] hover:bg-blue-800 transition duration-300 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => navigate(`/user/profile/${medico.id}`)}
+                      >
                         Ver Perfil
                       </button>
                       <button className="bg-red-500 hover:bg-red-700 transition duration-300 text-white font-bold py-2 px-4 m-2 rounded"

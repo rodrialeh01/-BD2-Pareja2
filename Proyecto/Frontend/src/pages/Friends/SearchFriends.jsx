@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SideBar from "../../components/Sidebar/Sidebar";
 import Service from "../../Service/Service";
 export default function SearchFriends() {
@@ -6,8 +7,8 @@ export default function SearchFriends() {
   const [especialidades, setEspecialidades] = useState([]);
   const [amigosdeamigos, setAmigosdeamigos] = useState([]);
   const [searchText, setSearchText] = useState("");
-
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     getMedicos();
   }, []);
@@ -19,18 +20,21 @@ export default function SearchFriends() {
       let temp = res.data;
       let especialidadesTemp = [];
       let newMedicos = [];
-      
+
       temp.map((medico) => {
-        if (medico.especialidadMatch === true && medico.amigo === false && medico.solicitud === false) {
+        if (
+          medico.especialidadMatch === true &&
+          medico.amigo === false &&
+          medico.solicitud === false
+        ) {
           especialidadesTemp.push(medico);
         }
-        if (medico.amigo === false && medico.solicitud === false){
+        if (medico.amigo === false && medico.solicitud === false) {
           newMedicos.push(medico);
         }
       });
       setEspecialidades(especialidadesTemp);
       setMedicos(newMedicos);
-
     } catch (error) {
       console.log(error);
     }
@@ -38,10 +42,9 @@ export default function SearchFriends() {
     try {
       const res = await Service.getFriendsOfFriends(id);
       let temp = res.data;
-      console.log(temp);
       let fOfF = [];
       temp.map((medico) => {
-        if (medico.amigo == false && medico.solicitud == false){
+        if (medico.amigo == false && medico.solicitud == false) {
           fOfF.push(medico);
         }
       });
@@ -50,11 +53,13 @@ export default function SearchFriends() {
     } catch (error) {
       console.log(error);
     }
-   
-  }
+  };
 
   const filteredMedicos = medicos.filter((medico) => {
-    return (medico.nombre.toLowerCase().includes(searchText.toLowerCase()) || medico.apellido.toLowerCase().includes(searchText.toLowerCase()));
+    return (
+      medico.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
+      medico.apellido.toLowerCase().includes(searchText.toLowerCase())
+    );
   });
 
   const handleAddFriend = async (idFriend) => {
@@ -70,14 +75,10 @@ export default function SearchFriends() {
       if (response.status === 200) {
         getMedicos();
       }
-
     } catch (error) {
       console.log(error);
     }
-  }
-
-
-
+  };
 
   return (
     <>
@@ -175,10 +176,14 @@ export default function SearchFriends() {
 
                   <div className="flex items-center justify-center">
                     <div className=" flex w-20 justify-center items-center text-white font-bold py-2 px-4 rounded-full mx-1">
-                      <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
+                      <button
+                        className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => navigate(`/user/profile/${medico.id}`)}
+                      >
                         Ver Perfil
                       </button>
-                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                      <button
+                        className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
                         onClick={() => handleAddFriend(medico.id)}
                       >
                         Mandar Solicitud
@@ -238,11 +243,15 @@ export default function SearchFriends() {
 
                   <div className="flex items-center justify-center">
                     <div className=" flex w-20 justify-center items-center text-white font-bold py-2 px-4 rounded-full mx-1">
-                      <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
+                      <button
+                        className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => navigate(`/user/profile/${medico.id}`)}
+                      >
                         Ver Perfil
                       </button>
-                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
-                      onClick={() => handleAddFriend(medico.id)}
+                      <button
+                        className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                        onClick={() => handleAddFriend(medico.id)}
                       >
                         Mandar Solicitud
                       </button>
@@ -295,11 +304,15 @@ export default function SearchFriends() {
 
                   <div className="flex items-center justify-center">
                     <div className=" flex w-20 justify-center items-center text-white font-bold py-2 px-4 rounded-full mx-1">
-                      <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
+                      <button
+                        className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => navigate(`/user/profile/${medico.id}`)}
+                      >
                         Ver Perfil
                       </button>
-                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
-                      onClick={() => handleAddFriend(medico.id)}
+                      <button
+                        className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                        onClick={() => handleAddFriend(medico.id)}
                       >
                         Mandar Solicitud
                       </button>
