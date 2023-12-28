@@ -1,32 +1,64 @@
 import { useEffect, useState } from "react";
 import SideBar from "../../components/Sidebar/Sidebar";
+import Service from "../../Service/Service";
 export default function AddFriends() {
   const [medicos, setMedicos] = useState([]);
-  const [especialidades, setEspecialidades] = useState([]);
-  const [amigosdeamigos, setAmigosdeamigos] = useState([]);
 
   useEffect(() => {
-    setMedicos([
-      {
-        nombreUsuario: "LisaMedica01",
-        nombre: "Lisa",
-        apellido: "Medicina",
-        correo: "correo@medicina.com",
-        edad: 28,
-        especialidad: "Pediatría",
-        foto: "https://eldoctor.pe/app/images/medico/perfil/imagen-medico.20201020181310.jpg",
-      },
-      {
-        nombreUsuario: "LisaMedica02",
-        nombre: "Lisa2",
-        apellido: "Medicina2",
-        correo: "correo2@medicina.com",
-        edad: 29,
-        especialidad: "Pediatría",
-        foto: "https://eldoctor.pe/app/images/medico/perfil/imagen-medico.20201020181310.jpg",
-      },
-    ]);
+    
+    getMedicos();
   }, []);
+
+  const getMedicos = async () => {
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      let response = await Service.getSolicitudes(id);
+      console.log(response);
+      if (response.status === 200) {
+        setMedicos(response.data);
+      }
+    } catch (error) {
+    }
+  }
+
+  const handleReject = async (idFriend) => {
+    let data = {
+      id: idFriend,
+    };
+
+    console.log(data);
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      let response = await Service.rechazarSolicitud(id, data);
+      console.log(response);
+      if (response.status === 200) {
+        getMedicos();
+      }
+
+    } catch (error) {
+    }
+  }
+
+  const handleAccept = async (idFriend) => {
+    let data = {
+      id: idFriend,
+    };
+
+    console.log(data);
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      let response = await Service.aceptarSolicitud(id, data);
+      console.log(response);
+      if (response.status === 200) {
+        getMedicos();
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
 
   return (
     <>
@@ -87,10 +119,14 @@ export default function AddFriends() {
 
                   <div className="flex items-center justify-center">
                     <div className=" flex w-20 justify-center items-center text-white font-bold py-2 px-4 rounded-full mx-1">
-                      <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
+                      <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => handleAccept(medico.id)}
+                      >
                         Agregar
                       </button>
-                      <button className="m-2 bg-red-500 hover:bg-red-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded">
+                      <button className="m-2 bg-red-500 hover:bg-red-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                        onClick={() => handleReject(medico.id)}
+                      >
                         Rechazar
                       </button>
                     </div>

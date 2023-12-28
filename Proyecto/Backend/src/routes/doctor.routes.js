@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getDoctores, getDoctor,mandarSolicitud, aceptarSolicitud, rechazarSolicitud, getSolicitudes, getAmigos, getDoctoresButMe, getFriendsOfFriends  } from "../controllers/doctor.controllers.js";
+import { getDoctores, getDoctor,mandarSolicitud, aceptarSolicitud, rechazarSolicitud, getSolicitudes, getAmigos, getDoctoresButMe, getFriendsOfFriends, deleteFriend  } from "../controllers/doctor.controllers.js";
 const router = Router();
 
 router.get('/getDoctores',getDoctores); //
@@ -12,5 +12,7 @@ router.post('/rechazarSolicitud/:id', rechazarSolicitud); //
 router.get('/getSolicitudes/:id', getSolicitudes); //
 router.get('/getAmigos/:id', getAmigos); //
 router.get('/getFriendsOfFriends/:id', getFriendsOfFriends);
+
+router.delete('/deleteFriend/:id', deleteFriend); //
 
 export default router;

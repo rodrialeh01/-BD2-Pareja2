@@ -1,30 +1,41 @@
 import { useEffect, useState } from "react";
 import SideBar from "../../components/Sidebar/Sidebar";
+import Service from "../../Service/Service";
 export default function MyFriends() {
   const [medicos, setMedicos] = useState([]);
 
   useEffect(() => {
-    setMedicos([
-      {
-        nombreUsuario: "LisaMedica01",
-        nombre: "Lisa",
-        apellido: "Medicina",
-        correo: "correo@medicina.com",
-        edad: 28,
-        especialidad: "Pediatría",
-        foto: "https://eldoctor.pe/app/images/medico/perfil/imagen-medico.20201020181310.jpg",
-      },
-      {
-        nombreUsuario: "LisaMedica02",
-        nombre: "Lisa2",
-        apellido: "Medicina2",
-        correo: "correo2@medicina.com",
-        edad: 29,
-        especialidad: "Pediatría",
-        foto: "https://eldoctor.pe/app/images/medico/perfil/imagen-medico.20201020181310.jpg",
-      },
-    ]);
+    getMedicos();
   }, []);
+
+  const getMedicos = async () => {
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      let response = await Service.getAmigos(id);
+      if (response.status === 200) {
+        setMedicos(response.data);
+      }
+    } catch (error) {
+    }
+  }
+
+  const handleDelete = async (idFriend) => {
+    let data = {
+      id: idFriend,
+    };
+
+    console.log(data);
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      let response = await Service.deleteFriend(id, data);
+      console.log(response);
+      if (response.status === 200) {
+        getMedicos();
+      }
+
+    } catch (error) {
+    }
+  }
 
   return (
     <>
@@ -82,7 +93,9 @@ export default function MyFriends() {
                       <button className="bg-[#007ac2] hover:bg-blue-800 transition duration-300 text-white font-bold py-2 px-4 rounded">
                         Ver Perfil
                       </button>
-                      <button className="bg-red-500 hover:bg-red-700 transition duration-300 text-white font-bold py-2 px-4 m-2 rounded">
+                      <button className="bg-red-500 hover:bg-red-700 transition duration-300 text-white font-bold py-2 px-4 m-2 rounded"
+                      onClick={() => handleDelete(medico.id)}
+                      >
                         Eliminar
                       </button>
                     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SideBar from "../../components/Sidebar/Sidebar";
+import Service from "../../Service/Service";
 export default function SearchFriends() {
   const [medicos, setMedicos] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
@@ -8,32 +9,75 @@ export default function SearchFriends() {
 
 
   useEffect(() => {
-    setMedicos([
-      {
-        nombreUsuario: "LisaMedica01",
-        nombre: "Lisa",
-        apellido: "Medicina",
-        correo: "correo@medicina.com",
-        edad: 28,
-        especialidad: "Pediatría",
-        foto: "https://eldoctor.pe/app/images/medico/perfil/imagen-medico.20201020181310.jpg",
-      },
-      {
-        nombreUsuario: "LisaMedica02",
-        nombre: "Maria",
-        apellido: "Pediatra",
-        correo: "correo2@medicina.com",
-        edad: 29,
-        especialidad: "Pediatría",
-        foto: "https://eldoctor.pe/app/images/medico/perfil/imagen-medico.20201020181310.jpg",
-      },
-    ]);
+    getMedicos();
   }, []);
 
+  const getMedicos = async () => {
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      const res = await Service.getDoctoresButMe(id);
+      let temp = res.data;
+      let especialidadesTemp = [];
+      let newMedicos = [];
+      
+      temp.map((medico) => {
+        if (medico.especialidadMatch === true && medico.amigo === false && medico.solicitud === false) {
+          especialidadesTemp.push(medico);
+        }
+        if (medico.amigo === false && medico.solicitud === false){
+          newMedicos.push(medico);
+        }
+      });
+      setEspecialidades(especialidadesTemp);
+      setMedicos(newMedicos);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const res = await Service.getFriendsOfFriends(id);
+      let temp = res.data;
+      console.log(temp);
+      let fOfF = [];
+      temp.map((medico) => {
+        if (medico.amigo == false && medico.solicitud == false){
+          fOfF.push(medico);
+        }
+      });
+      setAmigosdeamigos(fOfF);
+      console.log(fOfF);
+    } catch (error) {
+      console.log(error);
+    }
+   
+  }
 
   const filteredMedicos = medicos.filter((medico) => {
     return (medico.nombre.toLowerCase().includes(searchText.toLowerCase()) || medico.apellido.toLowerCase().includes(searchText.toLowerCase()));
   });
+
+  const handleAddFriend = async (idFriend) => {
+    let data = {
+      id: idFriend,
+    };
+    console.log(idFriend);
+    console.log(data);
+    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    try {
+      let response = await Service.mandarSolicitud(id, data);
+      console.log(response);
+      if (response.status === 200) {
+        getMedicos();
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
 
   return (
     <>
@@ -134,7 +178,9 @@ export default function SearchFriends() {
                       <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
                         Ver Perfil
                       </button>
-                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded">
+                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                        onClick={() => handleAddFriend(medico.id)}
+                      >
                         Mandar Solicitud
                       </button>
                     </div>
@@ -150,13 +196,13 @@ export default function SearchFriends() {
               </h1>
             </div>
             <div className="flex justify-center mt-5">
-              <h2 className="text-xl font-semibold text-[#040e5f]">
+              <h2 className="text-md font-semibold text-[#040e5f]">
                 {" "}
                 Amigos de Amigos:{" "}
               </h2>
             </div>
             <div className="w-full height-100 flex flex-wrap overflow-y-auto scrollbar-hide  justify-center mt-8">
-              {medicos.map((medico) => (
+              {amigosdeamigos.map((medico) => (
                 <div className="h-auto w-1/3 max-w-xs bg-white shadow-lg shadow-[#007ac2]/50 rounded-lg overflow-hidden transition-all ease-out duration-300 hover:scale-105 p-2 m-3">
                   <div className="flex items-center justify-center">
                     <img
@@ -195,7 +241,9 @@ export default function SearchFriends() {
                       <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
                         Ver Perfil
                       </button>
-                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded">
+                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleAddFriend(medico.id)}
+                      >
                         Mandar Solicitud
                       </button>
                     </div>
@@ -205,13 +253,13 @@ export default function SearchFriends() {
             </div>
 
             <div className="flex justify-center mt-5">
-              <h2 className="text-xl font-semibold text-[#040e5f]">
+              <h2 className="text-md font-semibold text-[#040e5f]">
                 {" "}
                 En el mismo campo que tú:{" "}
               </h2>
             </div>
             <div className="w-full height-100 flex flex-wrap overflow-y-auto scrollbar-hide  justify-center mt-8">
-              {medicos.map((medico) => (
+              {especialidades.map((medico) => (
                 <div className="h-auto w-1/3 max-w-xs bg-white shadow-lg shadow-[#007ac2]/50 rounded-lg overflow-hidden transition-all ease-out duration-300 hover:scale-105 p-2 m-3">
                   <div className="flex items-center justify-center">
                     <img
@@ -250,7 +298,9 @@ export default function SearchFriends() {
                       <button className="bg-green-500 hover:bg-green-700 transition duration-300 text-white font-bold py-2 px-4 rounded">
                         Ver Perfil
                       </button>
-                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded">
+                      <button className="m-2 bg-[#007ac2] hover:bg-blue-800 transition duration-300 ease-in-out text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleAddFriend(medico.id)}
+                      >
                         Mandar Solicitud
                       </button>
                     </div>

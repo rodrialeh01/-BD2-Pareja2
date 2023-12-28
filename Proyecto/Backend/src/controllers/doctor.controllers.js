@@ -58,6 +58,7 @@ export const getDoctor = async (req, res) => {
 
 // Obtiene todos los doctores excepto el que hace la petición
 export const getDoctoresButMe = async (req, res) => {
+    console.log(req.params.id);
     const cypherQuery = `
     MATCH (me:Doctor) WHERE elementId(me) = $myId
     MATCH (other:Doctor) WHERE NOT elementId(other) = $myId
@@ -77,12 +78,11 @@ export const getDoctoresButMe = async (req, res) => {
     try {
         const result = await session.run(cypherQuery, { myId: req.params.id });
         const doctores = result.records.map(record => {
-            console.log(record);
             const hasAmigo = record.get('amigoExists');
             const hasSolicitud = record.get('solicitudExists');
             const hasEspecialidadMatch = record.get('especialidadMatch');
             return {
-                id: record.get('other').properties.elementId,
+                id: record.get('other').elementId,
                 nombre: record.get('other').properties.nombre,
                 apellido: record.get('other').properties.apellido,
                 usuario: record.get('other').properties.usuario,
@@ -179,7 +179,7 @@ export const rechazarSolicitud = async (req, res) => {
 
 // Obtiene las solicitudes que ha recibido un doctor y que no ha mandado él
 export const getSolicitudes = async (req, res) => {
-    const cypherQuery = `MATCH (d2:Doctor)-[:SOLICITUD]->(d:Doctor) WHERE elementId(d) = '${req.params.id}' RETURN d2`;
+    const cypherQuery = `MATCH (d2:Doctor)-[:SOLICITUD]->(d:Doctor) WHERE elementId(d) = '${req.params.id}' AND NOT (d2:Doctor)-[:AMIGO]->(d:Doctor) RETURN d2`;
 
     //obteniendo el driver
     const driver = await NeoConnect();
@@ -204,7 +204,7 @@ export const getSolicitudes = async (req, res) => {
 
 // Obtiene los amigos de un doctor
 export const getAmigos = async (req, res) => {
-    const cypherQuery = `MATCH (d:Doctor)-[:AMIGO]-(d2:Doctor) 
+    const cypherQuery = `MATCH (d:Doctor)-[:AMIGO]->(d2:Doctor) 
     WHERE elementId(d) = '${req.params.id}' RETURN d2`;
 
     //obteniendo el driver
@@ -232,15 +232,14 @@ export const getAmigos = async (req, res) => {
 export const getFriendsOfFriends = async (req, res) => {
     const cypherQuery = `
     MATCH (me:Doctor) WHERE elementId(me) = '${req.params.id}' 
-    MATCH (me)-[:AMIGO]->(d2:Doctor)
-    MATCH (d2)-[:AMIGO]->(d3:Doctor)
-    OPTIONAL MATCH (me)-[:SOLICITUD]-(d3)
-    OPTIONAL MATCH (me)-[:AMIGO]-(d3)
+    MATCH (me)-[:AMIGO]->(d2:Doctor)-[:AMIGO]->(d3:Doctor)
+    OPTIONAL MATCH (me)-[:SOLICITUD]-(solicitudD3:Doctor)
+    WHERE NOT (me)-[:AMIGO]-(d3) AND NOT (me)-[:SOLICITUD]-(d3) AND NOT elementId(d3) = '${req.params.id}' 
 
-    WHERE NOT elementId(d3) = '${req.params.id}'   
-    RETURN d3,
-       CASE WHEN d3 IS NOT NULL AND (me)-[:SOLICITUD]-(d3) THEN true ELSE false END AS solicitudExists,
-       CASE WHEN d3 IS NOT NULL AND (me)-[:AMIGO]-(d3) THEN true ELSE false END AS amigoExists,
+RETURN d3,
+   CASE WHEN d3 IS NOT NULL AND (me)-[:SOLICITUD]-(d3) THEN true ELSE false END AS solicitudExists,
+   CASE WHEN d3 IS NOT NULL AND (me)-[:AMIGO]-(d3) THEN true ELSE false END AS amigoExists,
+   CASE WHEN d3 IS NOT NULL AND me = d3 THEN true ELSE false END AS soyYo;
     `;
 
     //obteniendo el driver
@@ -248,27 +247,73 @@ export const getFriendsOfFriends = async (req, res) => {
     const session = driver.session(); //abriendo una sesión
 
     const result = await session.run(cypherQuery);
-    const doctores = result.records.map(record => {
+    
+
+    if (result.records.length == 0) {
+        return res.json([]);
+    }
+
+    if (result.records[0].get('d3') == null || result.records[0].get('d3') == undefined) {
+        return res.json([]);
+    }
+    const resultArray = [];
+    
+    for (const record of result.records) {
         const hasSolicitud = record.get('solicitudExists');
         const hasAmigo = record.get('amigoExists');
-
-        return {
-            id: record.get('d3').elementId,
-            nombre: record.get('d3').properties.nombre,
-            apellido: record.get('d3').properties.apellido,
-            usuario: record.get('d3').properties.usuario,
-            fotoID: record.get('d3').properties.fotoID,
-            edad: record.get('d3').properties.edad.low,
-            especialidad: record.get('d3').properties.especialidad,
-            correo: record.get('d3').properties.correo,
-            password: record.get('d3').properties.password,
-            solicitud: hasSolicitud,
-            amigo: hasAmigo
-
+    
+        if (record.get('soyYo') === false) {
+            const doctorProperties = record.get('d3').properties;
+            const doctorObject = {
+                id: record.get('d3').elementId,
+                nombre: doctorProperties.nombre,
+                apellido: doctorProperties.apellido,
+                usuario: doctorProperties.usuario,
+                fotoID: doctorProperties.fotoID,
+                edad: doctorProperties.edad.low,
+                especialidad: doctorProperties.especialidad,
+                correo: doctorProperties.correo,
+                password: doctorProperties.password,
+                solicitud: hasSolicitud,
+                amigo: hasAmigo,
+                soyYo: record.get('soyYo')
+            };
+    
+            resultArray.push(doctorObject);
         }
     }
-    );
-    return res.json(doctores);
+    return res.json(resultArray);
+}
+
+// Elimina la relación de amistad entre dos doctores
+export const deleteFriend = async (req, res) => {
+    console.log(req.params.id);
+    console.log(req.body.id);
+
+    const cypherQuery = `
+    MATCH (me:Doctor) WHERE elementId(me) = '${req.params.id}' 
+    MATCH (me)-[r:AMIGO]-(d2:Doctor) WHERE elementId(d2) = '${req.body.id}'
+    DELETE r
+    RETURN me, d2;
+    `;
+
+    //obteniendo el driver
+    const driver = await NeoConnect();
+    const session = driver.session(); //abriendo una sesión
+    try {
+        const result = await session.run(cypherQuery);
+        if (result.summary.counters._stats.relationshipsDeleted == 0) {
+            return res.json({ msg: 'No existe la relación' }, 500);
+        }
+
+        return res.json({ msg: 'Relación eliminada' });
+
+        
+    } catch (error) {
+    } finally {
+        await session.close();
+    }
+    
 }
 
 
