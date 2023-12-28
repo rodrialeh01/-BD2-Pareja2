@@ -1,0 +1,62 @@
+[
+ {
+   "idHabitacion": 1,
+   "habitacion": "Sala de examenes 1"
+ },
+ {
+   "idHabitacion": 2,
+   "habitacion": "Sala de examenes 2"
+ },
+ {
+   "idHabitacion": 3,
+   "habitacion": "Sala de examenes 3"
+ },
+ {
+   "idHabitacion": 4,
+   "habitacion": "Sala de examenes 4"
+ },
+ {
+   "idHabitacion": 5,
+   "habitacion": "Sala de imagenes 1"
+ },
+ {
+   "idHabitacion": 6,
+   "habitacion": "Sala de procedimientos 1"
+ },
+ {
+   "idHabitacion": 7,
+   "habitacion": "Sala de procedimientos 2"
+ },
+ {
+   "idHabitacion": 8,
+   "habitacion": "Sala de procedimientos 3"
+ },
+ {
+   "idHabitacion": 9,
+   "habitacion": "Sala de procedimientos 4"
+ },
+ {
+   "idHabitacion": 10,
+   "habitacion": "Recepcion"
+ },
+ {
+   "idHabitacion": 11,
+   "habitacion": "Laboratorio"
+ },
+ {
+   "idHabitacion": 12,
+   "habitacion": "Estación de revisión 1"
+ },
+ {
+   "idHabitacion": 13,
+   "habitacion": "Estación de revisión 2"
+ },
+ {
+   "idHabitacion": 14,
+   "habitacion": "Estación de revisión 3"
+ },
+ {
+   "idHabitacion": 15,
+   "habitacion": "Estación de revisión 4"
+ }
+]

@@ -9,7 +9,8 @@ import error404Handler from './routes/error404.routes.js';
 import mensajesHandler from './routes/mensajes.routes.js';
 import pacientesHandler from './routes/pacientes.routes.js';
 import publicacionesHandler from './routes/publicaciones.routes.js';
-
+import dataHandler from './routes/data.routes.js';
+import consultasHandler from './routes/consultas.routes.js';
 const app = express()
 
 app.use(express.json());
@@ -34,6 +35,8 @@ app.use('/doctor', doctorHandler);
 app.use('/mensaje', mensajesHandler);
 app.use('/paciente', pacientesHandler);
 app.use('/publicacion', publicacionesHandler);
+app.use('/data', dataHandler);
+app.use('/consultas', consultasHandler);
 app.use(error404Handler);
 
 
