@@ -25,6 +25,28 @@ export const getExample = async () => {
 }
 */
 
+//Registro de doctores
+export const registroDoctor = async (data) => {
+    const response = await instance.post('/auth/registrar', data,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    return response;
+}
+
+//Inicio de sesión de un doctor
+export const loginDoctor = async (data) => {
+    const response = await instance.post('/auth/login', data,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    return response;
+}
+
 // Obtener a todos los demás doctores excepto a si mismo
 export const getDoctoresButMe = async (id) => {
     const response = await instance.get(`/doctor/getDoctoresButMe/${id}`);

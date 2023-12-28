@@ -25,12 +25,19 @@ export const registrarDoctor = async (req, res) => {
             });
         }
 
-        Photo.create({
+        const nuevaFoto = await Photo.create({
             correo: correo,
             image: imagen
-        })
+        });
 
-        const nuevaFoto = await Photo.findOne({ correo: correo }).select('_id');
+
+        if (!nuevaFoto) {
+            return res.status(400).json({
+                msg: 'Error al crear la foto'
+            });
+        }
+
+        console.log(nuevaFoto)
         const idFoto = nuevaFoto._id;
         const pwdcifrado = await cifrarPassword(password);
 

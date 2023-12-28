@@ -1,7 +1,9 @@
-import { ChevronFirst, ChevronLast, Home, LogOut, MessageCircle, Search, UserPlus, UsersRound, UserSearch } from 'lucide-react';
+import { ChevronFirst, ChevronLast, Home, LogOut, MessageCircle, Search, UserPlus, UserSearch, UsersRound } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../context/User';
 const SideBar = () => {
+    const { logged, setLogged } = useUser();
     const [expandido, setExpandido] = useState(true);
     const navigate = useNavigate();
     const Items = [
@@ -44,6 +46,12 @@ const SideBar = () => {
         navigate('/user/myprofile')
     }
 
+    const cerrarSesion = () => {
+        localStorage.removeItem('id_user');
+        setLogged(false);
+        navigate('/');
+    }
+
     return (
         <>
             <aside className="h-screen">
@@ -69,7 +77,7 @@ const SideBar = () => {
                         <li key={Items.length +1} className={`
                             relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors hover:bg-gray-500 text-white
                         `}
-                        onClick={() => goToPath('/')}>
+                        onClick={cerrarSesion}>
                             <LogOut size={20}/>
                             <span 
                             className={`overflow-hidden transition-all ${expandido?'w-52 ml-3':'w-0'}`}>Cerrar Sesión</span>                            

@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import SideBar from "../components/Sidebar/Sidebar";
+import LayoutPrivate from "../Layout/PrivateLayout";
 import Chat from "../pages/Chat/Chat";
 import Consulta1 from "../pages/Consultas/Consulta1";
 import Consulta2 from "../pages/Consultas/Consulta2";
@@ -27,11 +27,8 @@ export const router = createBrowserRouter([
     element: <Registro />,
   },
   {
-    path: "/sidebar",
-    element: <SideBar />,
-  },
-  {
     path: "/user",
+    element: <LayoutPrivate />,
     children: [
       {
         path: "home",
