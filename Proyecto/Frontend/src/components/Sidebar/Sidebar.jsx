@@ -1,11 +1,32 @@
 import { ChevronFirst, ChevronLast, Home, LogOut, MessageCircle, Search, UserPlus, UserSearch, UsersRound } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Service from '../../Service/Service';
 import { useUser } from '../../context/User';
 const SideBar = () => {
     const { logged, setLogged } = useUser();
     const [expandido, setExpandido] = useState(true);
+    const [nombre, setNombre] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [foto, setFoto] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const id = localStorage.getItem('id_user');
+        Service.getDoctor(id)
+        .then((response) => {
+            setNombre(response.data.nombre);
+            setCorreo(response.data.correo);
+        })
+
+        Service.getProfilePhoto(id)
+        .then((response) => {
+            setFoto(response.data.image);
+        })
+
+    }, [])
+
+
     const Items = [
         {
             icon:<Home size={20} />,
@@ -85,7 +106,7 @@ const SideBar = () => {
                     </ul>
 
                     <div className='border-t flex p-3 hover:bg-gray-500 hover:cursor-pointer' onClick={goToProfile}>
-                        <img src={'https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true'} alt="" 
+                        <img src={`${foto}`} alt="" 
                             className='w-10 h-10 rounded-md'
                         />
                         <div className={`
@@ -93,8 +114,8 @@ const SideBar = () => {
                         overflow-hidden transition-all ${expandido ? 'w-52 ml-3':'w-0'}
                         `}>
                             <div className='leading-4'>
-                                <h4 className='font-semibold text-white'>Jhon Doe</h4>
-                                <span className='text-xs text-gray-200'>johndoe@gmail.com</span>
+                                <h4 className='font-semibold text-white'>{nombre}</h4>
+                                <span className='text-xs text-gray-200'>{correo}</span>
                             </div>
                         </div>
                     </div>

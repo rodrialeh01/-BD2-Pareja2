@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const photoSchema = new Schema({
     correo: String,
-    image: Buffer
+    image: String
 });
 
 export const Photo = model('photos', photoSchema); 

@@ -123,6 +123,22 @@ export const getDoctor = async (id) => {
     return response;
 }
 
+//Obtener la foto de perfil de un doctor
+export const getProfilePhoto = async (id) => {
+    const response = await instance.get(`/doctor/getPhoto/${id}`);
+    return response;
+}
+
+export const updateDoctor = async (data) => {
+    const response = await instance.put(`/doctor/update`, data,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    return response;
+}
+
 // Consultas:
 export const getConsulta1 = async (id) => {
     const response = await instance.get(`/consultas/getConsulta1`);

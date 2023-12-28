@@ -1,3 +1,4 @@
+import { Photo } from '../db/mongo/models/photo.model.js';
 import { NeoConnect } from '../db/neo4j/neoConnection.js';
 
 // Obtiene todos los doctores
@@ -316,4 +317,45 @@ export const deleteFriend = async (req, res) => {
     
 }
 
+export const updateDoctor = async (req, res) => {
+    const { id, username, web } = req.body;
+    const cypherQuery = `
+    MATCH (d:Doctor) WHERE elementId(d) = '${id}'
+    SET d.usuario = '${username}', d.web = '${web}'
+    RETURN d;
+    `;
 
+    const driver = await NeoConnect();
+    const session = driver.session(); //abriendo una sesión
+    try {
+        await session.run(cypherQuery);
+        return res.json({ msg: 'Doctor actualizado' });
+    }catch (error) {
+        console.log(error);
+        return res.json({ msg: 'Error al enviar la solicitud' });
+    }
+
+}
+
+export const getProfilePhoto = async (req, res) => {
+    const { id }  = req.params;
+    const cypherQuery = `
+    MATCH (d:Doctor) WHERE elementId(d) = '${id}'
+    RETURN d.fotoID as fotoID;
+    `;
+    const driver = await NeoConnect();
+    const session = driver.session(); //abriendo una sesión
+    try {
+        const result = await session.run(cypherQuery);
+        const fotoID = result.records[0].get('fotoID');
+        console.log(fotoID);
+
+        const foto = await Photo.findById({ _id: fotoID}, { image: 1 });
+
+        return res.json({ image: foto.image });
+    }catch (error) {
+        console.log(error);
+        return res.json({ msg: 'Error al obtener la foto' });
+    }
+
+}

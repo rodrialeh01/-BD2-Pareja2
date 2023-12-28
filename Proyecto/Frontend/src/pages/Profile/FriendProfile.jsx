@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import SideBar from "../../components/Sidebar/Sidebar";
 import Service from "../../Service/Service";
+import SideBar from "../../components/Sidebar/Sidebar";
 const FriendProfile = () => {
   const { id } = useParams();
   const [medico, setMedico] = useState({});
+  const [foto, setFoto] = useState("");
   console.log(id);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getProfile();
+    Service.getProfilePhoto(id).then((response) => {
+      setFoto(response.data.image);
+    });
   }, [loading]);
 
   const getProfile = async () => {
@@ -36,7 +40,7 @@ const FriendProfile = () => {
                   <div class="flex justify-center">
                     {/* CAMBIAR POR LA FOTO */}
                     <img
-                      src="https://avatars0.githubusercontent.com/u/35900628?v=4"
+                      src={`${foto}`}
                       alt=""
                       class="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110"
                     />
@@ -48,6 +52,9 @@ const FriendProfile = () => {
                     </h1>
                     <p class="text-center text-sm text-gray-400 font-medium">
                       @{medico.usuario}
+                    </p>
+                    <p class="text-center text-sm text-gray-400 font-medium">
+                      Amigo(s)
                     </p>
                     <p className="px-6 text-lg">
                       <span className="font-bold">Edad: </span>

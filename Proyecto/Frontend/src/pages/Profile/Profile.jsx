@@ -1,11 +1,41 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Service from "../../Service/Service";
 import SideBar from "../../components/Sidebar/Sidebar";
 const Profile = () => {
     const navigate = useNavigate();
-
+    const id = localStorage.getItem("id_user");
     const EditarPerfil = () => {
         navigate('/user/editprofile');
     }
+    const [nombre, setNombre] = useState('');
+    const [apellido, setApellido] = useState('');
+    const [usuario, setUsuario] = useState('');
+    const [edad, setEdad] = useState('');
+    const [especialidad, setEspecialidad] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [web, setWeb] = useState('');
+    const [foto, setFoto] = useState('');
+
+    useEffect(() => {
+        Service.getDoctor(id)
+        .then((response) => {
+            console.log(response.data);
+            setNombre(response.data.nombre);
+            setApellido(response.data.apellido);
+            setUsuario(response.data.usuario);
+            setEdad(response.data.edad);
+            setEspecialidad(response.data.especialidad);
+            setCorreo(response.data.correo);
+            setWeb(response.data.web);
+        });
+
+        Service.getProfilePhoto(id)
+        .then((response) => {
+            console.log(response.data);
+            setFoto(response.data.image);
+        })
+    }, []);
 
     return (
         <div className="flex bg-gray-100">
@@ -15,16 +45,16 @@ const Profile = () => {
                     <div>
                         <div class="bg-white relative shadow rounded-lg w-5/6 md:w-5/6  lg:w-4/6 xl:w-3/6 mx-auto mt-n20">
                             <div class="flex justify-center">
-                                <img src="https://avatars0.githubusercontent.com/u/35900628?v=4" alt="" class="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110" />
+                                <img src={`${foto}`} alt="" class="rounded-full mx-auto absolute -top-20 w-32 h-32 shadow-md border-4 border-white transition duration-200 transform hover:scale-110" />
                             </div>
 
                             <div class="mt-16">
-                                <h1 class="font-bold text-center text-3xl text-gray-900">Nombre Apellido</h1>
-                                <p class="text-center text-sm text-gray-400 font-medium">@username</p>
-                                <p className="px-6 text-lg"><span className="font-bold">Edad: </span>22</p>
-                                <p className="px-6 text-lg"><span className="font-bold">Especialidad: </span>Cirujano</p>
-                                <p className="px-6 text-lg"><span className="font-bold">Correo Electrónico: </span>correo@correo.com</p>
-                                <p className="px-6 text-lg"><span className="font-bold">Sitio Web: </span><a href="www.web.com">www.web.com</a></p>
+                                <h1 class="font-bold text-center text-3xl text-gray-900">{nombre + ' '+ apellido}</h1>
+                                <p class="text-center text-sm text-gray-400 font-medium">{'@'+usuario}</p>
+                                <p className="px-6 text-lg"><span className="font-bold">Edad: </span>{edad}</p>
+                                <p className="px-6 text-lg"><span className="font-bold">Especialidad: </span>{especialidad}</p>
+                                <p className="px-6 text-lg"><span className="font-bold">Correo Electrónico: </span>{correo}</p>
+                                <p className="px-6 text-lg"><span className="font-bold">Sitio Web: </span><a href={`${web}`}>{web}</a></p>
                                 <div class="my-5 px-6">
                                     <a href="#" class="text-gray-200 block rounded-lg text-center font-medium leading-6 px-6 py-3 bg-gray-900 hover:bg-black hover:text-white" onClick={EditarPerfil}>Editar mi Perfil</a>
                                 </div>
