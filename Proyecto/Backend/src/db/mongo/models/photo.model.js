@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const photoSchema = new Schema({
-    idDoctor: Number,
+    correo: String,
     image: Buffer
 });
 
