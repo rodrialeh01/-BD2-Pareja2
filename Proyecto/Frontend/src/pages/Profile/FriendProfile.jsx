@@ -11,6 +11,9 @@ const FriendProfile = () => {
   console.log(id);
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
+  const [archivos, setArchivos] = useState([]);
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState(null);
   useEffect(() => {
     getProfile();
     areWeFriends();
@@ -18,6 +21,12 @@ const FriendProfile = () => {
     Service.getProfilePhoto(id).then((response) => {
       setFoto(response.data.image);
     });
+
+    Service.getPdfs(id)
+      .then((response) => {
+          console.log(response.data);
+          setArchivos(response.data);
+      })
 
     getAmigosProfile();
   }, [loading, loading2]);
@@ -78,6 +87,17 @@ const FriendProfile = () => {
     setLoading2(false);
   };
 
+  const verMasPdf = (archivo) => {
+    console.log(archivo);
+    setSelectedPdf(archivo);
+    setShowPdfModal(true);
+};
+
+const closeModal = () => {
+setShowPdfModal(false);
+setSelectedPdf(null);
+};
+
   return (
     <div className="flex bg-gray-100">
       <SideBar />
@@ -128,72 +148,57 @@ const FriendProfile = () => {
                         Casos de pacientes que estoy trabajando
                       </h3>
                       <div class="mt-5 w-full flex flex-col items-center overflow-hidden text-sm">
-                        <a
-                          href="#"
-                          class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150"
-                        >
-                          <div class="flex items-center">
-                            <div class="flex items-center">
-                              {/* Icono del PDF */}
-                              <span class="mr-2">
-                                <img
-                                  width="48"
-                                  height="48"
-                                  src="https://img.icons8.com/color/48/pdf.png"
-                                  alt="pdf"
-                                />
-                              </span>
-                              {/* Nombre del PDF */}
-                              <span class="text-sm font-medium">
-                                nombre_del_pdf.pdf
-                              </span>
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href="#"
-                          class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150"
-                        >
-                          <div class="flex items-center">
-                            <div class="flex items-center">
-                              {/* Icono del PDF */}
-                              <span class="mr-2">
-                                <img
-                                  width="48"
-                                  height="48"
-                                  src="https://img.icons8.com/color/48/pdf.png"
-                                  alt="pdf"
-                                />
-                              </span>
-                              {/* Nombre del PDF */}
-                              <span class="text-sm font-medium">
-                                nombre_del_pdf.pdf
-                              </span>
-                            </div>
-                          </div>
-                        </a>
-                        <a
-                          href="#"
-                          class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150"
-                        >
-                          <div class="flex items-center">
-                            <div class="flex items-center">
-                              {/* Icono del PDF */}
-                              <span class="mr-2">
-                                <img
-                                  width="48"
-                                  height="48"
-                                  src="https://img.icons8.com/color/48/pdf.png"
-                                  alt="pdf"
-                                />
-                              </span>
-                              {/* Nombre del PDF */}
-                              <span class="text-sm font-medium">
-                                nombre_del_pdf.pdf
-                              </span>
-                            </div>
-                          </div>
-                        </a>
+                      {archivos.map((archivo, index) => (
+                                            <div key={index} class="w-full border-t border-gray-100 text-gray-600 py-4 pl-6 pr-3 w-full block hover:bg-gray-100 transition duration-150 hover:cursor-pointer" onClick={() =>verMasPdf(archivo.pdfPacientes)}>
+                                                <div class="flex items-center">
+                                                    <div class="flex items-center">
+                                                        {/* Icono del PDF */}
+                                                        <span class="mr-2">
+                                                            <img width="48" height="48" src="https://img.icons8.com/color/48/pdf.png" alt="pdf" />
+                                                        </span>
+                                                        {/* Nombre del PDF */}
+                                                        <span class="text-sm font-medium">{archivo.nombre}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {showPdfModal && (
+  <div className="fixed z-10 inset-0 overflow-y-auto">
+    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      {/* Fondo oscuro detrás del modal */}
+      <div className="fixed inset-0 transition-opacity">
+        <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+      </div>
+
+      {/* Contenido del modal */}
+      <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full">
+        <div className="bg-white p-5" style={{ width: 'auto' }}>
+          <div className="text-center">
+            <button className="absolute top-0 right-0 m-3" onClick={closeModal}>
+              &times;
+            </button>
+            {selectedPdf && (
+              <div className="text-center">
+                <button className="absolute top-0 right-0 m-3" onClick={closeModal}>
+                  &times;
+                </button>
+                <div style={{ width: '100%', height: '700px' }}>
+                  <object
+                    data={selectedPdf}
+                    type="application/pdf"
+                    width="100%"
+                    height="100%"
+                  >
+                  </object>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
                       </div>
                     </div>
                   </div>

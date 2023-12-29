@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LayoutPrivate from "../Layout/PrivateLayout";
 import Chat from "../pages/Chat/Chat";
+import Messages from "../pages/Chat/Messages";
 import Consulta1 from "../pages/Consultas/Consulta1";
 import Consulta2 from "../pages/Consultas/Consulta2";
 import Consulta3 from "../pages/Consultas/Consulta3";
@@ -16,7 +17,6 @@ import Login from "../pages/Login/Login";
 import FriendProfile from "../pages/Profile/FriendProfile";
 import Profile from '../pages/Profile/Profile';
 import Registro from "../pages/Registro/Registro";
-import Messages from "../pages/Chat/Messages";
 
 export const router = createBrowserRouter([
   {
@@ -71,7 +71,6 @@ export const router = createBrowserRouter([
         path: "patients",
         element: <Consulta />,
       },
-
       {
         path: "consulta1",
         element: <Consulta1 />,

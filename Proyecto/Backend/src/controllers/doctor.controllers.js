@@ -1,3 +1,4 @@
+import { Pdf } from '../db/mongo/models/pdf.model.js';
 import { Photo } from '../db/mongo/models/photo.model.js';
 import { NeoConnect } from '../db/neo4j/neoConnection.js';
 
@@ -397,3 +398,37 @@ export const areWeFriends = async (req, res) => {
         return res.json({ msg: 'Error al obtener la foto' });
     }
 }   
+
+export const insertarPdf = async (req, res) => {
+    const { id } = req.params;
+    const { pdf, nombre } = req.body;
+
+    try{
+        Pdf.create({
+            idDoctor: id,
+            nombre: nombre,
+            pdfPacientes: pdf
+        });
+        return res.status(200).json({
+            msg: 'Pdf subido exitosamente'
+        });
+    }catch(error){
+        console.log(error);
+        return res.status(400).json({
+            msg: 'Error en el servidor'
+        });
+    }
+}
+
+export const getPdfs = async (req, res) => {
+    const { id } = req.params;
+    try{
+        const pdfs = await Pdf.find({ idDoctor: id });
+        return res.status(200).json(pdfs);
+    }catch(error){
+        console.log(error);
+        return res.status(400).json({
+            msg: 'Error en el servidor'
+        });
+    }
+}

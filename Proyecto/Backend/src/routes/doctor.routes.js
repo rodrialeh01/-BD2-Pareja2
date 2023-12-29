@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { aceptarSolicitud, deleteFriend, getAmigos, getDoctor, getDoctores, getDoctoresButMe, getFriendsOfFriends, getProfilePhoto, getSolicitudes, mandarSolicitud, rechazarSolicitud, updateDoctor, areWeFriends } from "../controllers/doctor.controllers.js";
+import { aceptarSolicitud, areWeFriends, deleteFriend, getAmigos, getDoctor, getDoctores, getDoctoresButMe, getFriendsOfFriends, getPdfs, getProfilePhoto, getSolicitudes, insertarPdf, mandarSolicitud, rechazarSolicitud, updateDoctor } from "../controllers/doctor.controllers.js";
 const router = Router();
 
 router.get('/getDoctores',getDoctores); //
@@ -19,5 +19,8 @@ router.delete('/deleteFriend/:id', deleteFriend); //
 router.put('/update', updateDoctor); //
 
 router.get('/areWeFriends/:idMe/:idFriend', areWeFriends);
+
+router.post('/cargarPDF/:id', insertarPdf);
+router.get('/getPDFs/:id', getPdfs);
 
 export default router;

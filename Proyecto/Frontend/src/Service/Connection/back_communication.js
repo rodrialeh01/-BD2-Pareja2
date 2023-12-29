@@ -224,3 +224,19 @@ export const insertMessage = async (data) => {
 
     return response;
 }
+// Crear un pdf
+export const addPdf = async (id, data) => {
+    const response = await instance.post(`/doctor/cargarPDF/${id}`, data,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    return response;
+}
+
+// Obtener los pdfs de un doctor
+export const getPdfs = async (id) => {
+    const response = await instance.get(`/doctor/getPDFs/${id}`);
+    return response;
+}
