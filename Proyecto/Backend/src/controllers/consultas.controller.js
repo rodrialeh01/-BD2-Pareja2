@@ -59,9 +59,34 @@ export const consulta2 = async (req, res) => {
             {
                 $group: {
                     _id: "$idHabitacion",
-                    count: { $sum: 1 }
+                    count: { $sum: 1 },
+                }
+            },
+            {
+                $sort: {
+                    _id: 1
+                }
+            },
+            
+            {
+                $lookup: {
+                    from: "habitaciones",
+                    localField: "_id", 
+                    foreignField: "idHabitacion",
+                    as: "habitacion"
+                }
+            },
+            {
+                $unwind: "$habitacion"
+            },
+            {
+                $project: {
+                    _id: 1,
+                    count: 1,
+                    habitacionNombre: "$habitacion.habitacion"
                 }
             }
+            
         ]);
         return res.status(200).json(result);
     } catch (error) {

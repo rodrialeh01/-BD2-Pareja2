@@ -16,6 +16,7 @@ import Login from "../pages/Login/Login";
 import FriendProfile from "../pages/Profile/FriendProfile";
 import Profile from '../pages/Profile/Profile';
 import Registro from "../pages/Registro/Registro";
+import Messages from "../pages/Chat/Messages";
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
       {
         path:'profile/:id',
         element:<FriendProfile/>
+      },
+      {
+        path: 'chat/:id',
+        element: <Messages />,
       },
       {
         path:'editprofile',

@@ -8,20 +8,38 @@ export default function Chat() {
   const [medicos, setMedicos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const Regresar = () => {
-    navigate("/user/patients");
-  };
-
   useEffect(() => {
     getMedicosAmigos();
   }, [loading]);
 
   const getMedicosAmigos = async () => {
-    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    const id = localStorage.getItem("id_user");
+
     try {
       let response = await Service.getAmigos(id);
       if (response.status === 200) {
-        setMedicos(response.data);
+        /*setMedicos(response.data);
+        setLoading(false);*/
+
+        let m = response.data;
+        let imagePromises = [];
+
+        m.forEach((medico) => {
+          const promise = Service.getProfilePhoto(medico.id).then(
+            (response) => {
+              medico.image = response.data.image;
+            }
+          ).catch((error) => {
+            console.log(error);
+          }
+          );
+          imagePromises.push(promise);
+        }
+        );
+
+        await Promise.all(imagePromises);
+
+        setMedicos(m);
         setLoading(false);
       }
     } catch (error) {}
@@ -52,18 +70,18 @@ export default function Chat() {
                         <tr key={index} className="bg-azullog border-b">
                           <th
                             scope="row"
-                            className="px-6 py-4 font-medium text-white whitespace-nowrap"
+                            className="font-medium text-white whitespace-nowrap bg-black/10"
                           >
                             <td className="px-3 py-1 text-white">
                               <img
-                                className="h-24 w-24 rounded-full"
-                                src={dato.foto}
+                                className="h-24 w-24 rounded-full hover:scale-105 transition-all duration-300"
+                                src={dato.image}
                                 alt="imagen"
                               ></img>
                             </td>
                           </th>
                           <td className="text-white">
-                            <p className="text-white text-2xl font-semibold">
+                            <p className="text-white text-2xl font-semibold ml-3">
                               {dato.nombre + " " + dato.apellido}
                             </p>
                           </td>
@@ -71,7 +89,7 @@ export default function Chat() {
                             <button
                               href="#"
                               className="text-gray-200 inline-block rounded-lg text-center font-medium leading-6 px-6 py-3 bg-red-600 hover:bg-red-800 hover:text-white"
-                              onClick={Regresar}
+                              onClick={() => {navigate("/user/chat/" + dato.id)}}
                             >
                               Ver Chat
                               <svg

@@ -98,7 +98,7 @@ export const getDoctoresButMe = async (req, res) => {
             };
         });
 
-        return res.json(doctores);
+        return res.json(doctores).status(200);
     } catch (error) {
         console.log(error);
     } finally {
@@ -295,15 +295,20 @@ export const deleteFriend = async (req, res) => {
     console.log(req.body.id);
 
     const cypherQuery = `
-    MATCH (me:Doctor) WHERE elementId(me) = '${req.params.id}' 
-    MATCH (me)-[r:AMIGO]-(d2:Doctor) WHERE elementId(d2) = '${req.body.id}'
+    MATCH (me:Doctor)
+    WHERE elementId(me) = '${req.params.id}'
+    MATCH (me)-[r:AMIGO]-(d2:Doctor)
+    WHERE elementId(d2) = '${req.body.id}'
     DELETE r
 
-    MATCH (me)-[r2:CHAT]-(chat:Chat)-[r3:CHAT]-(d2)
+    WITH me, d2
+
+    MATCH (me)-[r2:CHAT]->(chat:Chat)
+    MATCH (d2)-[r3:CHAT]->(chat)
     DELETE r2, r3, chat
-    
-    RETURN me, d2;
     `;
+
+    console.log(cypherQuery);
 
     //obteniendo el driver
     const driver = await NeoConnect();
@@ -311,15 +316,17 @@ export const deleteFriend = async (req, res) => {
     try {
         const result = await session.run(cypherQuery);
         if (result.summary.counters._stats.relationshipsDeleted == 0) {
-            return res.json({ msg: 'No existe la relación' }, 500);
+            console.log(result)
+            return res.status(500).json({ msg: 'No existe la relación' });
         }
 
         return res.json({ msg: 'Relación eliminada' });
 
         
     } catch (error) {
+        console.log(error);
     } finally {
-        await session.close();
+        
     }
     
 }
@@ -366,3 +373,27 @@ export const getProfilePhoto = async (req, res) => {
     }
 
 }
+
+export const areWeFriends = async (req, res) => {
+    // get the 2 ids:
+    const { idMe, idFriend } = req.params;
+
+    const cypherQuery = `
+    MATCH (d:Doctor) WHERE elementId(d) = '${idMe}'
+    MATCH (d2:Doctor) WHERE elementId(d2) = '${idFriend}'
+    OPTIONAL MATCH (d)-[r:AMIGO]-(d2)
+    RETURN r;
+    `;
+    const driver = await NeoConnect();
+    const session = driver.session(); //abriendo una sesión
+    try {
+        const result = await session.run(cypherQuery);
+        if (result.records[0].get('r') == null) {
+            return res.json({ msg: 'No son amigos' });
+        }
+        return res.json({ msg: 'Son amigos' });
+    }catch (error) {
+        console.log(error);
+        return res.json({ msg: 'Error al obtener la foto' });
+    }
+}   

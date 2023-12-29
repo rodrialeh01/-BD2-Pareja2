@@ -10,12 +10,31 @@ export default function AddFriends() {
   }, []);
 
   const getMedicos = async () => {
-    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    const id = localStorage.getItem("id_user");
+
     try {
       let response = await Service.getSolicitudes(id);
       console.log(response);
       if (response.status === 200) {
-        setMedicos(response.data);
+        let m = response.data;
+        let imagePromises = [];
+
+        m.forEach((medico) => {
+          const promise = Service.getProfilePhoto(medico.id).then((response) => {
+            medico.image = response.data.image;
+          }
+          ).catch((error) => {
+            console.log(error);
+          }
+          );
+          imagePromises.push(promise);
+        }
+        );
+
+        await Promise.all(imagePromises);
+        setMedicos(m);
+
+
       }
     } catch (error) {
     }
@@ -25,9 +44,7 @@ export default function AddFriends() {
     let data = {
       id: idFriend,
     };
-
-    console.log(data);
-    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    const id = localStorage.getItem("id_user");
     try {
       let response = await Service.rechazarSolicitud(id, data);
       console.log(response);
@@ -45,7 +62,7 @@ export default function AddFriends() {
     };
 
     console.log(data);
-    let id = "4:06debc2f-53ec-4333-9660-729ed9a6571f:1";
+    const id = localStorage.getItem("id_user");
     try {
       let response = await Service.aceptarSolicitud(id, data);
       console.log(response);
@@ -87,7 +104,7 @@ export default function AddFriends() {
                 <div className="h-auto w-1/3 max-w-xs bg-white shadow-lg shadow-[#007ac2]/50 rounded-lg overflow-hidden transition-all ease-out duration-300 hover:scale-105 p-2 m-3">
                   <div className="flex items-center justify-center">
                     <img
-                      src={medico.foto}
+                      src={medico.image}
                       alt="Imagen de Perfil"
                       className="w-48 h-48 rounded-lg"
                     />

@@ -51,10 +51,10 @@ export default function Consulta2() {
                 <thead class="text-xs text-white uppercase bg-gray-50 dark:bg-gray-700 dark:text-white">
                   <tr>
                     <th scope="col" class="px-6 py-3">
-                      
+                    ID Habitacion
                     </th>
                     <th scope="col" class="px-6 py-3">
-                      ID Habitacion
+                      Nombre Habitacion
                     </th>
                     <th scope="col" class="px-6 py-3">
                       Cantidad
@@ -70,9 +70,9 @@ export default function Consulta2() {
                             scope="row"
                             className="px-6 py-4 font-medium text-white whitespace-nowrap"
                           >
-                            
+                            {dato._id}
                           </th>
-                          <td className="px-6 py-4 text-white">{dato._id}</td>
+                          <td className="px-6 py-4 text-white">{dato.habitacionNombre}</td>
                           <td className="px-6 py-4 text-white">{dato.count}</td>
                         </tr>
                       ))}

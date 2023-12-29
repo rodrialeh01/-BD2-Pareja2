@@ -49,13 +49,23 @@ export const loginDoctor = async (data) => {
 
 // Obtener a todos los demás doctores excepto a si mismo
 export const getDoctoresButMe = async (id) => {
-    const response = await instance.get(`/doctor/getDoctoresButMe/${id}`);
+    const response = await instance.get(`/doctor/getDoctoresButMe/${id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'
+        }
+    
+    });
     return response;
 }
 
 // Obtener a los doctores amigos de amigos
 export const getFriendsOfFriends = async (id) => {
-    const response = await instance.get(`/doctor/getFriendsOfFriends/${id}`);
+    const response = await instance.get(`/doctor/getFriendsOfFriends/${id}`, {
+        headers: {
+            'Cache-Control': 'no-cache'
+        }
+    });
     return response;
 }
 
@@ -125,7 +135,11 @@ export const getDoctor = async (id) => {
 
 //Obtener la foto de perfil de un doctor
 export const getProfilePhoto = async (id) => {
-    const response = await instance.get(`/doctor/getPhoto/${id}`);
+    const response = await instance.get(`/doctor/getPhoto/${id}`, {
+        headers: {
+            'Cache-Control': 'no-cache'
+        }
+    });
     return response;
 }
 
@@ -138,6 +152,13 @@ export const updateDoctor = async (data) => {
         });
     return response;
 }
+
+// Revisar si somos amigos
+export const areWeFriends = async (id, data) => {
+    const response = await instance.get(`/doctor/areWeFriends/${id}/${data}`);
+    return response;
+}
+
 
 // Consultas:
 export const getConsulta1 = async (id) => {

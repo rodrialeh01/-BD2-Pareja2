@@ -5,15 +5,22 @@ import SideBar from "../../components/Sidebar/Sidebar";
 const FriendProfile = () => {
   const { id } = useParams();
   const [medico, setMedico] = useState({});
+  const [medicoFriends, setMedicoFriends] = useState({});
   const [foto, setFoto] = useState("");
+  const [relation, setRelation] = useState(""); // [true, false
   console.log(id);
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
   useEffect(() => {
     getProfile();
+    areWeFriends();
+
     Service.getProfilePhoto(id).then((response) => {
       setFoto(response.data.image);
     });
-  }, [loading]);
+
+    getAmigosProfile();
+  }, [loading, loading2]);
 
   const getProfile = async () => {
     try {
@@ -26,6 +33,49 @@ const FriendProfile = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const areWeFriends = async () => {
+    try {
+      const idMe = localStorage.getItem("id_user");
+
+      let response = await Service.areWeFriends(idMe, id);
+      console.log(response);
+      if (response.data.msg === "Son amigos") {
+        setRelation("Son amigos");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getAmigosProfile = async () => {
+    try {
+      let response = await Service.getAmigos(id);
+      console.log(response);
+      if (response.status === 200) {
+        let m = response.data;
+        let imagePromises = [];
+
+        m.forEach((me) => {
+          const promise = Service.getProfilePhoto(me.id)
+            .then((response) => {
+              me.image = response.data.image;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          imagePromises.push(promise);
+        });
+
+        await Promise.all(imagePromises);
+
+        setMedicoFriends(m);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading2(false);
   };
 
   return (
@@ -53,8 +103,8 @@ const FriendProfile = () => {
                     <p class="text-center text-sm text-gray-400 font-medium">
                       @{medico.usuario}
                     </p>
-                    <p class="text-center text-sm text-gray-400 font-medium">
-                      Amigo(s)
+                    <p class="text-center text-sm text-gray-400 font-medium italic">
+                      {relation}
                     </p>
                     <p className="px-6 text-lg">
                       <span className="font-bold">Edad: </span>
@@ -150,6 +200,55 @@ const FriendProfile = () => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        <div className="flex flex-col border-l-2 border-white w-full">
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex items-center">
+                <h1 className="text-3xl font-bold text-black">Amigos &nbsp;</h1>
+              </div>
+
+              {loading2 ? null : (
+                <div className="w-full height-100 flex flex-wrap overflow-y-auto scrollbar-hide  justify-center">
+                  <div className="w-full height-100 flex flex-wrap overflow-y-auto scrollbar-hide  justify-center ">
+                    {medicoFriends.map((friend) => (
+                      <div className="h-auto w-1/3 max-w-xs bg-white shadow-lg shadow-black/20 rounded-lg overflow-hidden transition-all ease-out duration-300 hover:scale-105 p-2 m-3">
+                        <div className="flex items-center justify-center">
+                          <img
+                            alt="Imagen de Perfil"
+                            className="w-48 h-48 rounded-lg"
+                            src={friend.image}
+                          />
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <div className="p-4 flex">
+                            <h1 className="text-xl font-semibold text-gray-800">
+                              {friend.nombre + " " + friend.apellido}
+                            </h1>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <div className="p-2">
+                            <h1 className="text-sm text-gray-800 font-mono">
+                              {friend.correo}
+                            </h1>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <div className="p-2">
+                            <h1 className="text-sm text-gray-800 italic">
+                              Especialidad: {friend.especialidad}
+                            </h1>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
