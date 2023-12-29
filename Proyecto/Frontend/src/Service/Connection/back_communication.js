@@ -186,6 +186,17 @@ export const getConsulta5 = async (id) => {
     return response;
 }
 
+// getChat
+export const getChat = async (id, data) => {
+    const response = await instance.post(`/mensaje/getChat/${id}`, data,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response;
+}
+
 // Crear una publicación
 export const addPublicacion = async (id, data) => {
     const response = await instance.post(`/publicacion/publicar/${id}`, data,
@@ -196,9 +207,20 @@ export const addPublicacion = async (id, data) => {
         });
     return response;
 }
-
 // Obtener las publicaciones de un doctor
 export const getPublicaciones = async (id) => {
     const response = await instance.get(`/publicacion/getPublicaciones/${id}`);
+    return response;
+}
+
+// insertMessage
+export const insertMessage = async (data) => {
+    const response = await instance.post(`/mensaje/insertMessage`, data,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
     return response;
 }
