@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import SideBar from "../../components/Sidebar/Sidebar";
 import Service from "../../Service/Service";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function MyFriends() {
   const navigate = useNavigate();
 
   const [medicos, setMedicos] = useState([]);
+  const [medicosVacios, setMedicosVacios] = useState(true);
 
   useEffect(() => {
     getMedicos();
@@ -31,6 +33,12 @@ export default function MyFriends() {
         });
 
         await Promise.all(imagePromises);
+        if (m.length === 0) {
+          setMedicosVacios(true);
+        } else {
+          setMedicosVacios(false);
+        }
+
         setMedicos(m);
       }
     } catch (error) {
@@ -61,14 +69,25 @@ export default function MyFriends() {
           <div className="flex-1 overflow-y-auto scrollbar-hide">
             <div className="mt-5 flex flex-col items-center justify-center">
               <div className="flex items-center">
-                {/*Busqueda y esas cosas*/}
-
                 <h1 className="text-3xl font-bold text-black">
                   Mis Amigos &nbsp;
                 </h1>
               </div>
             </div>
 
+            {medicosVacios && (
+              <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center">
+                  <h1 className="text-2xl font-bold text-black">
+                    No tienes amigos, pero puedes agregarlos en la sección de
+                    <Link to={"/user/searchfriends"} className="text-blue-500 hover:text-blue-800 transition duration-300">
+                      &nbsp;Buscar Amigos
+                    </Link>
+
+                  </h1>
+                </div>
+              </div>
+            )}
             <div className="w-full height-100 flex flex-wrap overflow-y-auto scrollbar-hide  justify-center mt-8">
               {medicos.map((medico) => (
                 <div className="h-auto w-1/3 max-w-xs bg-white shadow-lg shadow-black/20 rounded-lg overflow-hidden transition-all ease-out duration-300 hover:scale-105 p-2 m-3">

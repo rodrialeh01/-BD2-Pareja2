@@ -89,23 +89,25 @@ export default function Messages() {
   return (
     <div className="flex bg-gray-100 h-screen">
       <SideBar />
-      <h1 className="ml-2 text-2xl text-center mt-4 flex flex-col items-center  justify-center">
-        <img
-          className="w-10 h-10 rounded-full mb-2"
-          alt="photo"
-          src={otroDoc.image}
-        />
-        <span>
-          {otroDoc.nombre} {otroDoc.apellido}
-        </span>
-      </h1>
+
       <div className="p-7 flex-1 flex flex-col">
         <div className="flex-5 overflow-y-scroll scrollbar-hide border-l-2 border-white bg-gray-300 h-5/6">
           <div className="flex justify-center items-center">
             <table className="min-w-full border border-gray-300 overflow-y-scroll scrollbar-hide h-auto bg-gray-300">
-              <thead>
+              <thead className="sticky top-0">
                 <tr>
-                  <th className="p-4"></th>
+                  <th className="p-2 bg-gray-400 flex">
+                    <h1 className="ml-2 text-xl mt-4 flex items-center">
+                      <img
+                        className="w-10 h-10 rounded-full mb-2"
+                        alt="photo"
+                        src={otroDoc.image}
+                      />
+                      <span className="ml-5">
+                        {otroDoc.nombre} {otroDoc.apellido}
+                      </span>
+                    </h1>
+                  </th>
                 </tr>
               </thead>
               <tbody>
