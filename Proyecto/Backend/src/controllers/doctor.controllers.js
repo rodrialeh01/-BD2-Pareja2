@@ -140,6 +140,9 @@ export const aceptarSolicitud = async (req, res) => {
     DELETE s 
     MERGE (doc1)-[:AMIGO]->(doc2)
     MERGE (doc2)-[:AMIGO]->(doc1)
+
+    CREATE (doc1)-[:CHAT]->(chat:Chat{lbl: 'Mensajería', doctor1: '${req.body.id}', doctor2: '${req.params.id}'})
+    CREATE (doc2)-[:CHAT]->(chat)     
     `;
     //obteniendo el driver
     const driver = await NeoConnect();
@@ -295,6 +298,10 @@ export const deleteFriend = async (req, res) => {
     MATCH (me:Doctor) WHERE elementId(me) = '${req.params.id}' 
     MATCH (me)-[r:AMIGO]-(d2:Doctor) WHERE elementId(d2) = '${req.body.id}'
     DELETE r
+
+    MATCH (me)-[r2:CHAT]-(chat:Chat)-[r3:CHAT]-(d2)
+    DELETE r2, r3, chat
+    
     RETURN me, d2;
     `;
 
